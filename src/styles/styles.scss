@@ -1,0 +1,23 @@
+//Fret styles
+$diapason: (
+  color: #FFCC9A!important,
+  width: 60px,
+  height: 15px,
+);
+
+$fret: (
+  width: 2px,
+  color: #9b9a9a!important,
+);
+
+$string: (
+  color: #000000!important,
+  height: 5px
+);
+
+$fret-group: (
+  width: map-get($diapason, width) + map-get($fret, width) * 2,
+  height: map-get($diapason, height) * 2 + map-get($string, height)
+);
+
+
