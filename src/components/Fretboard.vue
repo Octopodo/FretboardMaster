@@ -9,16 +9,7 @@
         :stringIndex="index"
       ></fretboard-string>
     </div>
-    <v-row class="scale-notes">
-      <v-col
-        v-for="(note, index) in scale"
-        :key="index"
-        cols="1"
-        class="headline font-weight-bold error--text mx-2"
-      >
-        {{note}}
-      </v-col>
-    </v-row>
+    
   </div>
 </template>
 

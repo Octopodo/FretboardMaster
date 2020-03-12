@@ -1,26 +1,5 @@
 <template>
   <div>
-    <v-menu offset-y>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          color="primary"
-          dark
-          v-on="on"
-        >
-          Tonalidad: {{tone}}
-        </v-btn>
-      </template>
-      <v-list>
-          <v-list-item
-            v-for="(item, index) in availableTones"
-            :key="index"
-            @click="changeTone(index)"
-          >
-            <v-list-item-title>{{ item }}</v-list-item-title>
-          </v-list-item>
-        
-      </v-list>
-    </v-menu>
     <v-treeview 
       class="custom-treeview"
       activatable
@@ -49,12 +28,6 @@
       scales() {
         return this.$store.state.tone.scales
       },
-      tone(){
-        return this.$store.state.tone.currentTone
-      },
-      availableTones() {
-        return this.$store.state.tone.availableTones
-      },
       active() {
         return this.$store.state.tone.currentScaleId
       }
@@ -69,9 +42,7 @@
       changeScale(items) {
         this.$store.dispatch('tone/setCurrentScale', items[0])
       },
-      changeTone(tone){
-        this.$store.dispatch('tone/changeTone', tone)
-      },
+
       getOpenedGroups(items) {
         
       }

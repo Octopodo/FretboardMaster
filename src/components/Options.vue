@@ -1,7 +1,7 @@
 <template>
 <div>
 
-  <v-row>
+  <v-row class="grey lighten-2 pl-6">
     <v-col cols="3" class="pl-0">
       <v-row class="mb-0">
         <v-col cols="4" class="pb-0">
@@ -111,6 +111,5 @@
 </script>
 
 <style lang="sass" scoped>
-
 
 </style>

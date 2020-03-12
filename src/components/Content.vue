@@ -5,7 +5,10 @@
         <scale-selector/>
       </v-col>
       <v-col xs="10">
-        <fretboard class="ma-12" style="display: inline!important"/>
+        
+        <fretboard class="fretboard" />
+        <tone-selector class="tone-selector"></tone-selector>
+        <div class="divider"></div>
         <options/>
       </v-col>
       
@@ -18,17 +21,30 @@
 import Fretboard from "@/components/Fretboard";
 import ScaleSelector from "@/components/ScaleSelector"
 import Options from "@/components/Options"
+import ToneSelector from '@/components/ToneSelector'
 
 export default {
   name: 'App',
   components: {
     Fretboard,
     ScaleSelector,
+    ToneSelector,
     Options
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="sass" scoped>
+.tone-selector
+  margin-left: 25%!important
+  margin-top:2%
+  margin-bottom: 2%
+
+.fretboard
+  margin-top: 50px!important
+
+.divider
+  height: 2px
+  background-color: LightGray
 
 </style>
