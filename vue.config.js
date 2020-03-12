@@ -13,6 +13,9 @@ module.exports = {
     devtool: 'source-map'
   },
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/fretboard-generator/'
-    : '/'
+    ? '/fretboard.github.io/'
+    : '/',
+
+    productionSourceMap: false,  
+    outputDir: '../dist'
 }
