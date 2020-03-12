@@ -2,7 +2,6 @@
 <div>
 
   <v-row>
-    
     <v-col cols="3" class="pl-0">
       <v-row class="mb-0">
         <v-col cols="4" class="pb-0">
@@ -19,9 +18,8 @@
         </v-col>
       </v-row>
       <interval-selector class="mb-12 ml-6"></interval-selector>
-      
     </v-col>
-    
+
     <v-col cols="3" class="mt-4">
       <div class="mb-3">
         POSICIONES
@@ -61,9 +59,7 @@
         </v-col>
       </v-row>
     </v-col>
-  </v-row>
-
-    
+  </v-row>  
 </div>
 </template>
 
