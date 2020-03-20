@@ -1,39 +1,22 @@
 <template>
   
     <div class="fret-group">
-      
       <fret-tone 
         :index="index"
-        :stringIndex="stringIndex"
+        :string-index="stringIndex"
         :root="root"
+        :fret-size="fretSize"
         class="fret-tone"
       ></fret-tone>
-      <div v-if="!top && !hidden" class="fret-container">
-        <div class="fret fret-color"></div>
-        <div class="diapason diapason-color"></div>
-        <div class="fret fret-color"></div>
-      </div>
-      <div v-else>
-        <div class="fret hidden-fret"></div>
-        <div class="diapason hidden-fret"></div>
-        <div class="fret hidden-fret"></div>
-      </div>
-      <div v-if="!hidden">
-        <div class="string string-color"></div>
-      </div>
-      <div v-else>
-        <div class="string hidden"></div>
-      </div>
-      <div v-if="!bottom && !hidden" class="fret-container">
-        <div class="fret fret-color"></div>
-        <div class="diapason diapason-color"></div>
-        <div class="fret fret-color"></div>
-      </div>
-      <div v-else>
-        <div class="fret hidden-fret"></div>
-        <div class="diapason hidden-fret"></div>
-        <div class="fret hidden-fret"></div>
-      </div>
+      <div 
+        :style="diapasonStyle('top')"
+      ></div>
+      <div
+        :style="stringStyle()"
+      ></div>
+      <div 
+        :style="diapasonStyle('bottom')"
+      ></div>
       
     </div>
 </template>
@@ -45,21 +28,9 @@
       FretTone
     },
     props: {
-      top: {
-        type: Boolean,
-        default: false
-      },
-      bottom: {
-        type: Boolean,
-        default: false
-      },
       marker: {
         type: String,
         default: undefined
-      },
-      hidden: {
-        type: Boolean,
-        default: false
       },
       tone: {
         type: String,
@@ -76,39 +47,71 @@
       root: {
         type: Boolean,
         default: false
-      }
+      },
+    },
+    computed: {
+      top() {
+        return this.stringIndex == 0
+      },
+      bottom() {
+        let strings = this.$store.state.stringCount;
+        return this.stringIndex == strings - 1
+      },
+      fretSize() {
+        return this.$store.getters['fretboard/fretSize']
+      },
+      diapasonColor() {
+        return this.$store.state.fretboard.diapasonColor
+      },
+      fretbarColor() {
+        return this.$store.state.fretboard.fretbarColor
+      },
+      stringColor() {
+        return this.$store.state.fretboard.stringColor
+      },
+      hidden() {
+        return this.index == 0
+      },
+      winSize() {
+        return window.width + '-' + window.height
+      }  
     },
     methods: {
-      edge(e) {
-        if(e == 'top') {
-          return this.top ? true : false
+      diapasonStyle(edge) {
+        let height = this.fretSize.height;
+        let isHidden = this.hidden
+          || (edge == 'top' && this.top)
+          || (edge == 'bottom' && this.bottom)
+        let style = {
+          width: `${this.fretSize.width}px!important`,
+          height: `${height}px!important`,
+          borderStyle: isHidden ? 'hidden':'solid',
+          borderWidth: `0px ${this.fretSize.barWidth}px`,
+          borderColor: this.fretbarColor,
+          backgroundColor: isHidden ? 'rgba(1, 0, 0, 0)': `${this.diapasonColor}`
         }
-        if(e == 'bottom') {
-          return this.bottom ? true : false
-        } 
-        return false
-      }
+        return style
+      },
+      stringStyle(){
+        let height = this.fretSize.stringHeight;
+        // let isHidden = this.hidden
+        //   || (edge == 'top' && this.top)
+        //   || (edge == 'bottom' && this.bottom)
+        return {
+          width: `${this.fretSize.width}px!important`,
+          height: `${height}px!important`,
+          backgroundColor: this.hidden ? 'rgba(1, 0, 0, 0)' : this.stringColor
+        }
+      },
     },
   }
 </script>
 
 <style lang="sass" scoped>
-.fret-container
-  display: grid
-  grid-template-columns: map-get($fret, width) map-get($diapason, width)  map-get($fret, width)
-
 .fret-group
   display: inline-block
   vertical-align: top
-.diapason
-  height: map-get($diapason, height)
-  
-.fret
-  height: map-get($fret, height)
 
-.string
-  width: map-get($fret-group, width)
-  height: map-get($string, height)
 
 .diapason-color
   background-color: map-get($diapason, color)
@@ -124,13 +127,11 @@
 
 .fret-tone
   position: absolute!important
-
   z-index: 1
 
 .top-edge
   padding-top: map-get($diapason, height)!important
   
-
 </style>
 
 

@@ -28,13 +28,16 @@ export default {
     activePositions: [],
     fingerCount: 3,
     maxFingers: 4,
-    tunning:standartTunning,
+    tunning: standartTunning,
     intervalsMap: IntervalMaps.map,
     toneColor: '#42A5F5',
     allColors: '#42A5F5',
     allSelected: false,
     hideUnmarkedNotes: false,
-    
+    toneSize: 28,
+    toneRoundness: 50,
+    selectedColor: 'yellow',
+    selectedWidth: 5
   },
   mutations: {
 

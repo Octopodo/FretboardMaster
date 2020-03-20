@@ -1,12 +1,9 @@
 <template>
   <div>
-
     <div v-for="(string, index) in stringCount" :key="index" class="string-container mt-0">
       <fretboard-string
         style="" 
-        :top="index == 0" 
-        :bottom="index == stringCount - 1"
-        :stringIndex="index"
+        :string-index="index"
       ></fretboard-string>
     </div>
     <v-row class="scale-notes">
@@ -31,16 +28,23 @@
     computed: {
       scale(){
         return this.$store.state.tone.currentScale.notes
+      },
+      fretboardSize() {
+        return this.$store.getters['fretboard/fretboardSize']
       }
     },
 
     data() {
       return {
-        stringCount: 6
+        stringCount: 6,
+        window: {
+          width: 0,
+          height: 0
+        }
       }
     },
     created() {
-      this.$store.commit('tone/SET_POSITIONS')
+      this.$store.commit('tone/SET_POSITIONS');
     },
     methods: {
       stringTone(tone) {

@@ -1,26 +1,21 @@
 <template>
-
+<div>
   <transition name="scale-transition">
-    <div class="fret" v-if="visible">
-      <!-- <v-tooltip top>
-        <template v-slot:activator="{ on }"> -->
-          <div 
-        
-            ref="fret"
-            class="tone-background principal"
-            :class="computedClass"
-            :style="computedStyle" 
-            @click.prevent="select()"
-          >
-            <div class="tone white--text">
-              {{fret.tone}}
-            </div>
-          </div>
-        <!-- </template>
-        <span>Oct:{{fret.oct}}</span>
-      </v-tooltip> -->
+    <div v-if="visible" :style="diapasonStyle" class="wrapper">
+      <div 
+        ref="fret"
+        class="tone-background"
+        :style="toneStyle" 
+        @click.prevent="select()"
+      >
+        <div class="tone white--text">
+          {{fret.tone}}
+        </div>
+      </div>
     </div>
   </transition>
+</div>
+  
 </template>
 
 <script>
@@ -37,6 +32,9 @@
       root: {
         type: Boolean,
         default: false
+      },
+      fretSize: {
+        type: Object
       }
     },
     computed: {
@@ -46,15 +44,21 @@
       visible () {
         return this.root? true : this.$store.getters['tone/toneIsVisible'](this.fret.tone, this.index, this.stringIndex)
       },
-      computedStyle() {
+      toneStyle() {
         return {
-          backgroundColor: this.harmonicColor
+          backgroundColor: this.harmonicColor,
+          width: `${this.$store.state.tone.toneSize}px`,
+          height: `${this.$store.state.tone.toneSize}px`,
+          borderRadius: `${this.$store.state.tone.toneRoundness}px`,
+          boxShadow: this.selected ? `0 0 0 ${this.$store.state.tone.selectedWidth}px ${this.$store.state.tone.selectedColor}` : 'none'
         }
       },
-      computedClass() {
-        return {
-          'selected-fret' : this.isSelected
+      diapasonStyle() {
+        let style = {
+          width: `${this.fretSize.width}px!important`,
+          height: `${this.fretSize.height}px!important`,
         }
+        return style
       },
       harmonicColor() {
         return this.$store.getters['tone/getHarmonicColor'](this.fret.tone) + '!important'
@@ -63,7 +67,7 @@
 
     data() {
       return {
-        isSelected: false,
+        selected: false,
         id: this.stringIndex.toString() + '-' + this.index.toString(),
         toneData: ''
       }
@@ -72,32 +76,22 @@
     },
     methods: {
       select() {
-        this.isSelected = !this.isSelected
+        this.selected = !this.selected
       }
     }
   }
 </script>
 
 <style lang="sass" scoped>
-.fret
-  // background-color: rgba(255, 0, 0, 0.2)
-  // border: 1px solid rgba(255, 0, 0, 0.4)
-  width: map-get($fret-group, width)
-  height: map-get($fret-group, height)
 
 .tone-background
-  margin-left: 27%!important
-  margin-top: 5%!important
   position: relative
   line-height: 1.9em
   cursor: pointer
-  width: 28px!important
-  height: 28px!important
-  border-radius: 50px
   text-align: center
   vertical-align: middle
   display:inline-block
-  margin-left: 27%!important
+  margin: auto
   margin-top: 5%!important
 
 .tonica

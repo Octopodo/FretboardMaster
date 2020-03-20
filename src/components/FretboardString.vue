@@ -2,15 +2,12 @@
   <div class="string">
 <!-- 
     <fret hidden :stringIndex="stringIndex" root></fret> -->
-
     <fret  
       v-for="(fret, index) in fretCount" 
       :key="index" 
       :hidden="index == 0"
-      :stringIndex="stringIndex" 
+      :string-index="stringIndex" 
       :index="index"
-      :top="top"
-      :bottom="bottom" 
     >
       
     </fret>
@@ -28,28 +25,10 @@
         type: Number,
         default: undefined
       },
-      top: {
-        type: Boolean,
-        default: false
-      },
-      bottom: {
-        type: Boolean,
-        default: false
-      },
-    },
-    computed: {
-      tuning() {
-        return this.$store.getters['tone/tunning'](this.stringIndex)
-      }
     },
     data() {
       return {
         fretCount: 20
-      }
-    },
-    methods: {
-      fretTone() {
-
       }
     },
   }

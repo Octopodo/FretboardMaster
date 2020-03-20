@@ -43,7 +43,11 @@ export default function(newTunning, newFrets, scale) {
         fret++
         oct =  fret >= intervals.length ? oct + 1 : oct
         fret = fret >= intervals.length ? 0 : fret;
-        string.push({tone: intervals[fret], oct: oct, fret: i + 1});
+        string.push({
+          tone: intervals[fret], 
+          oct: oct, 
+          fret: i + 1
+        });
         i++
       }
       fretboard.push(string);
