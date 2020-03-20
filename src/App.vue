@@ -11,6 +11,15 @@ export default {
   name: 'App',
   components: {
     FretboardContent
+  },
+  created() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+  },
+  methods: {
+    handleResize(){
+      this.$store.dispatch('fretboard/setFretboardSize')
+    },
   }
 }
 </script>
