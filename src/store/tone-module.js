@@ -34,13 +34,17 @@ export default {
     allColors: '#42A5F5',
     allSelected: false,
     hideUnmarkedNotes: false,
-    toneSize: 28,
+    toneSize: 25,
     toneRoundness: 50,
+    toneFontSize: 12.5,
+    toneTextColor: '#FFFFFF' ,
     selectedColor: 'yellow',
     selectedWidth: 5
   },
   mutations: {
-
+    SET_TONE_TEXT_COLOR(state, payload) {
+      state.toneTextColor = payload.color
+    },
     SET_ALL_FRET_COLORS(state, color) {
       state.allColors = color;
       for(var i = 0; i < state.intervalsMap.length; i++) {
@@ -85,6 +89,11 @@ export default {
 
     SET_FINGER_COUNT(state, value) {
       state.fingerCount = value
+    },
+    SET_TONE_SIZE(state, value) {
+      state.toneSize = value;
+      state.toneRoundness = value * 2;
+      state.toneFontSize = value/2
     }
   },
   getters: {

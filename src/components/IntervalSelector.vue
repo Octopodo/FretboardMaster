@@ -100,7 +100,7 @@
       },
       intervalOutputName(index, interval) {
         return `${interval.outputName} (${this.$store.getters['tone/getScaleTone'](index)})`
-      }
+      },
     }
   }
 </script>

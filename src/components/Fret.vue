@@ -5,7 +5,7 @@
         :index="index"
         :string-index="stringIndex"
         :root="root"
-        :fret-size="fretSize"
+        :fretSize="fretSize"
         class="fret-tone"
       ></fret-tone>
       <div 
@@ -60,6 +60,9 @@
       fretSize() {
         return this.$store.getters['fretboard/fretSize']
       },
+      stringHeight() {
+        return this.$store.getters['fretboard/stringHeight']
+      },
       diapasonColor() {
         return this.$store.state.fretboard.diapasonColor
       },
@@ -93,13 +96,9 @@
         return style
       },
       stringStyle(){
-        let height = this.fretSize.stringHeight;
-        // let isHidden = this.hidden
-        //   || (edge == 'top' && this.top)
-        //   || (edge == 'bottom' && this.bottom)
         return {
           width: `${this.fretSize.width}px!important`,
-          height: `${height}px!important`,
+          height: `${this.stringHeight}px!important`,
           backgroundColor: this.hidden ? 'rgba(1, 0, 0, 0)' : this.stringColor
         }
       },
