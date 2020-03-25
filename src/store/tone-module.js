@@ -36,7 +36,7 @@ export default {
     hideUnmarkedNotes: false,
     toneSize: 25,
     toneRoundness: 50,
-    toneFontSize: 12.5,
+    toneFontSize: 14,
     toneTextColor: '#FFFFFF' ,
     selectedColor: 'yellow',
     selectedWidth: 5
@@ -93,7 +93,7 @@ export default {
     SET_TONE_SIZE(state, value) {
       state.toneSize = value;
       state.toneRoundness = value * 2;
-      state.toneFontSize = value/2
+      state.toneFontSize = (value + 4) / 2
     }
   },
   getters: {

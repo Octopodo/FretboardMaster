@@ -60,7 +60,7 @@
       </v-row>
     </v-col>
     <v-col>
-      <fretboard-style-controls/>
+
     </v-col>
   </v-row>  
 </div>
@@ -68,11 +68,9 @@
 
 <script>
   import IntervalSelector from '@/components/IntervalSelector'
-  import FretboardStyleControls from '@/components/FretboardStyleControls'
   export default {
     components: {
       IntervalSelector,
-      FretboardStyleControls
     },
     computed:{
       positionCount() {

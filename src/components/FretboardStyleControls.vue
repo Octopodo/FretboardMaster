@@ -1,41 +1,29 @@
 <template>
-  <div class="ml-12">
-    <color-picker model="diapason" module="fretboard" label="Diapasón"></color-picker>
-    <color-picker model="string" module="fretboard" label="Cuerdas"></color-picker>
-    <color-picker model="fretbar" module="fretboard" label="Trastes"></color-picker>
-    <color-picker model="toneText" module="tone" label="Letras" mutation="SET_TONE_TEXT_COLOR"></color-picker>
-    
-    <v-slider
-      v-model="toneSize"
-      label="Tamaño de los Puntos"
-      :min="2"
-      :max="maxToneSize"
-      :step="0.1"
-    />
-    <v-slider
-      v-model="stringHeight"
-      label="Grosor cuerdas"
-      :min="1"
-      :max="maxStringHeight"
-      :step="0.1"
-    />
-
-    <v-slider
-      v-model="fretbarSize"
-      label="Grosor trastes"
-      :min="1"
-      :max="maxFretbarWidth"
-      :step="0.1"
-    />
-
-    <v-slider
-      v-model="fretHeight"
-      label="Altura Trastes"
-      :min="10"
-      :max="maxFretHeight"
-      :step="0.1"
+  <div class=" py-6 px-12">
+    <color-picker
+      class="my-2"
+      v-for="(color, index) in colorPickers"
+      :key="index"
+      :model="color.model"
+      :module="color.storeModule"
+      :label="color.label"
+      :border-color="borderColor"
+      :label-color="labelColor"
+      :mutation="color.mutation"
     />
     
+    <div class="mt-6">
+      <v-slider
+        v-for="(slider, index) in sliders"
+        
+        :key="index"
+        v-model="slider.model"
+        :label="slider.label"
+        :min="slider.min"
+        :max="slider.max"
+        :step="slider.step"
+      />
+    </div>
   </div>
 </template>
 
@@ -81,10 +69,20 @@ import ColorPicker from '@/components/ColorPicker'
     },
     data() {
       return {
-        maxFretHeight: 40,
-        maxFretbarWidth: 8,
-        maxStringHeight: 10,
-        maxToneSize: 100 
+        sliders: [
+          {label:"Tamaño de Puntos", model: this.toneSize, min: 2, max: 100, step: 0.5},
+          {label:"Grosor de cuerdas", model: this.stringHeight, min: 1, max: 10, step: 0.5},
+          {label:"Grosor de trastes", model: this.fretbarSize, min: 1, max: 8, step: 0.5},
+          {label:"Altura de trastes", model: this.fretHeight, min: 10, max: 40, step: 0.5},
+        ],
+        borderColor: '#212121',
+        labelColor: 'white',
+        colorPickers: [
+          {model: 'diapason', storeModule: "fretboard", label: 'Diapasón'},
+          {model: 'string', storeModule: "fretboard", label: 'Cuerdas'},
+          {model: 'fretbar', storeModule: "fretboard", label: 'Trastes'},
+          {model: 'toneText', storeModule: "tone", label: 'Letras', mutation: "SET_TONE_TEXT_COLOR"},
+        ]
 
       }
     },
@@ -95,5 +93,4 @@ import ColorPicker from '@/components/ColorPicker'
 </script>
 
 <style lang="sass" scoped>
-
 </style>

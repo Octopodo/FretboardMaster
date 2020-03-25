@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div style="z-index: -1!important">
     <div v-for="(string, index) in stringCount" :key="index" class="string-container mt-0">
-      <fretboard-string
-        style="" 
+      <fretboard-string 
         :string-index="index"
       ></fretboard-string>
     </div>

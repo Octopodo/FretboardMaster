@@ -2,6 +2,7 @@
   <div>
     <v-row>
       <v-menu
+        :dark="dark"
         :close-on-content-click="false"
       >
         <template v-slot:activator="{ on }">
@@ -10,7 +11,7 @@
         <v-color-picker v-model="color">
         </v-color-picker>
       </v-menu>
-      <div class="title-label">
+      <div :style="labelStyle" dark>
         {{label}}
       </div>
     </v-row>
@@ -35,6 +36,18 @@
       mutation: {
         type: String,
         default: undefined
+      },
+      borderColor: {
+        type: String,
+        default: 'white'
+      },
+      dark: {
+        type: Boolean,
+        default: false
+      },
+      labelColor: {
+        type: String,
+        default: 'rgba(0, 0, 0, 0.6)'
       }
     },
     computed: {
@@ -56,18 +69,24 @@
         return {
           'background-color': color + '!important',
           'cursor': 'pointer',
-          'border': '4px solid white',
+          'border': `4px solid ${this.borderColor}`,
           height: '30px',
           width: '50px',
         }
       },
+      labelStyle() {
+        return {
+          marginLeft: '10px',
+          marginTop: 'auto',
+          marginBottom: 'auto',
+          color: this.labelColor
+
+        }
+        
+      }
     },
   }
 </script>
 
 <style lang="sass" scoped>
-.title-label
-  margin-left: 10px
-  margin-top: auto
-  margin-bottom: auto
 </style>

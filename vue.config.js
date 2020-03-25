@@ -12,5 +12,8 @@ module.exports = {
   configureWebpack: {
     devtool: 'source-map'
   },
-  publicPath: '/FretboardMaster/'
+  // publicPath: '/FretboardMaster/'
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/FretboardMaster/'
+    : '/'
 }

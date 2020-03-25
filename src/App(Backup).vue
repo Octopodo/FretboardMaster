@@ -1,11 +1,7 @@
 <template>
   <v-app id="app">
     <appbar/>
-    <v-content>
-        <fretboard-content/>
-      
-    </v-content>
-    
+    <fretboard-content/>
   </v-app>
 </template>
 
