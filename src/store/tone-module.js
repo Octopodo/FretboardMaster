@@ -17,93 +17,41 @@ const standartTunning = [
 export default {
   namespaced: true,
   state: {
-    fretboard: new Fretboard('standart', 20, chromaticScale),
+    //SCALES
+    availableTones: ScaleGenerator.sharps,
     chromaticScale: ScaleGenerator.chromaticScale(),
     currentScale: ScaleGenerator.make('major', 'C', 13),
     currentScaleId: 'major',
-    scales: ScaleGenerator.scales,
-    availableTones: ScaleGenerator.sharps,
     currentTone: 'C',
-    positions: [],
-    activePositions: [],
-    fingerCount: 3,
-    maxFingers: 4,
-    tunning: standartTunning,
     intervalsMap: IntervalMaps.map,
-    toneColor: '#42A5F5',
-    allColors: '#42A5F5',
-    allSelected: false,
-    hideUnmarkedNotes: false,
-    toneSize: 25,
-    toneRoundness: 50,
-    toneFontSize: 14,
-    toneTextColor: '#FFFFFF' ,
-    selectedColor: 'yellow',
-    selectedWidth: 5
+    scales: ScaleGenerator.scales,
+    activePositions: [],
+    fretboard: new Fretboard('standart', 20, chromaticScale),
+    positions: [],
+    tunning: standartTunning,
+    
   },
-  mutations: {
-    SET_TONE_TEXT_COLOR(state, payload) {
-      state.toneTextColor = payload.color
-    },
-    SET_ALL_FRET_COLORS(state, color) {
-      state.allColors = color;
-      for(var i = 0; i < state.intervalsMap.length; i++) {
-        state.intervalsMap[i].color = color
-      }
-    },
 
-    SELECT_ALL_FRETS(state, value) {
-      state.allSelected = value;
-      for(var i = 0; i < state.intervalsMap.length; i++) {
-        state.intervalsMap[i].visible = value
-      }
-    },
-
-    SET_HIDE_UNMARKED_NOTES(state, value) {
-      state.hideUnmarkedNotes = value
-    },
-
-    SET_FRETBOARD(state) {
-      let fretboard = new Fretboard(state.tunning, 20, state.currentScale);
-      state.fretboard = fretboard
-    },
-
-    SET_CURRENT_SCALE(state, id) {
-      state.currentScaleId = id || state.currentScaleId;
-      state.currentScale = ScaleGenerator.make(state.currentScaleId, state.currentTone, 13);
-      state.maxFingers = ScaleGenerator.getScaleDef(state.currentScaleId).fingers
-      state.fingerCount = state.maxFingers
-    },
-
-    CHANGE_TONE(state, index) {
-      state.currentTone = state.availableTones[index]
-    },
-
-    SET_POSITIONS(state) {
-      state.positions = ScaleGenerator.generatePositions(state.fingerCount, state.currentScale.notes, state.fretboard.matrix())
-
-    },
-    SET_ACTIVE_POSITIONS(state, value){
-      state.activePositions = value
-    },
-
-    SET_FINGER_COUNT(state, value) {
-      state.fingerCount = value
-    },
-    SET_TONE_SIZE(state, value) {
-      state.toneSize = value;
-      state.toneRoundness = value * 2;
-      state.toneFontSize = (value + 4) / 2
-    }
-  },
   getters: {
+    //SIMPLE
     toneSize: state => state.toneSize,
-    getScaleTone(state) {
-      return index => {
-        return state.currentScale.notes[index]
+    stringCount: state=> state.stringCount,
+
+    //COMPLEX
+    getCurrentScaleId(state) {
+      return  scales => {
+        return scales[state.currentScaleId] != undefined ? state.currentScaleId : undefined
       }
     },
 
+    getHarmonicColor(state) {
+      return tone => {
+        let steps = ScaleGenerator.getToneIntervals(tone, state.currentScale);
+        let note = state.intervalsMap.find(tone => tone.steps == steps)
+        return note.visible ? note.color : state.toneColor
+      }
+    },
+    
     getScaleHarmonicFrets(state) {
       let frets = [];
       let lastName = '';
@@ -125,23 +73,24 @@ export default {
       return frets
     },
 
-    getHarmonicColor(state) {
-      return tone => {
-        let steps = ScaleGenerator.getToneIntervals(tone, state.currentScale);
-        let note = state.intervalsMap.find(tone => tone.steps == steps)
-        return note.visible ? note.color : state.toneColor
+    getScaleTone(state) {
+      return index => {
+        return state.currentScale.notes[index]
       }
     },
+
+    getNote(state) {
+      return (index, stringIndex) => {
+        return state.fretboard.matrix()[stringIndex][index]
+      }
+    },
+
     stringTune(state) {
       return index => {
         return state.fretboard.tunning()[index] 
       }
     },
-    fretTone(state) {
-      return (index, stringIndex) => {
-        return state.fretboard.matrix()[stringIndex][index]
-      }
-    },
+
     toneIsVisible(state) {
       return (tone, index, stringIndex) => {
         if(state.currentScale == [] || state.currentScale.notes.length == 0) {
@@ -160,7 +109,6 @@ export default {
             if(isInPosition) {
               break
             }
-            // isInPosition = 1
           }
         } 
         let isHidenNote = state.intervalsMap.find(interval => {
@@ -170,12 +118,69 @@ export default {
         return isInPosition && isInScale && !isHidenNote
       }
     },
-    getCurrentScaleId(state) {
-      return  scales => {
-        return scales[state.currentScaleId] != undefined ? state.currentScaleId : undefined
+    
+  },
+
+  mutations: {
+    SET_ACTIVE_POSITIONS(state, value){
+      state.activePositions = value
+    },
+
+    SET_ALL_FRET_COLORS(state, color) {
+      state.allColors = color;
+      for(var i = 0; i < state.intervalsMap.length; i++) {
+        state.intervalsMap[i].color = color
       }
     },
+
+    SELECT_ALL_FRETS(state, value) {
+      state.allSelected = value;
+      for(var i = 0; i < state.intervalsMap.length; i++) {
+        state.intervalsMap[i].visible = value
+      }
+    },
+
+    SET_CURRENT_SCALE(state, id) {
+      state.currentScaleId = id || state.currentScaleId;
+      state.currentScale = ScaleGenerator.make(state.currentScaleId, state.currentTone, 13);
+      state.maxFingers = ScaleGenerator.getScaleDef(state.currentScaleId).fingers
+      state.fingerCount = state.maxFingers
+    },
+
+    SET_FINGER_COUNT(state, value) {
+      state.fingerCount = value
+    },
+
+    SET_FRETBOARD(state) {
+      let fretboard = new Fretboard(state.tunning, 20, state.currentScale);
+      state.fretboard = fretboard
+    },
+
+    SET_HIDE_UNMARKED_NOTES(state, value) {
+      state.hideUnmarkedNotes = value
+    },
+
+    SET_TONE_TEXT_COLOR(state, payload) {
+      state.toneTextColor = payload.color
+    },
+
+    SET_POSITIONS(state) {
+      state.positions = ScaleGenerator.generatePositions(state.fingerCount, state.currentScale.notes, state.fretboard.matrix())
+
+    },
+
+    CHANGE_TONE(state, index) {
+      state.currentTone = state.availableTones[index]
+    },
+    
+    SET_TONE_SIZE(state, value) {
+      state.toneSize = value;
+      state.toneRoundness = value * 2;
+      state.toneFontSize = (value + 4) / 2
+    }
   },
+ 
+  
 
   actions: {
     setCurrentScale({commit}, id) {

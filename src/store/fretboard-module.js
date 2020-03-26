@@ -6,44 +6,54 @@ const windowHeight = window.innerHeight;
 export default {
   namespaced: true,
   state: {
-    diapasonColor: '#FFCC9A',
-    fretbarColor: '#686868',
-    stringColor: '#000000',
+    //DIMENSIONS
     fbRatio: fbRatio,
+    fretbarWidth: 4,
     fretboardSize: {
       width: windowWidth * fbRatio,
-      height: windowHeight * fbRatio,
+      height: 200,
     },
-    fretSize: {
-      width: (windowWidth * fbRatio) / 20,
-      height: 15,
-      barWidth: 4,
-    },
+    selectedWidth: 5,
     stringHeight: 4,
-    PAR: PAR
+    toneFontSize: 14,
+    toneRoundness: 50,
+    toneSize: 25,
+   
+    //COLORS
+    allColors: '#42A5F5',
+    diapasonColor: '#FFCC9A',
+    fretbarColor: '#686868',
+    selectedColor: 'yellow',
+    stringColor: '#000000',
+    toneColor: '#42A5F5',
+    toneTextColor: '#FFFFFF' ,
+    
+    //USER
+    allSelected: false,
+    fingerCount: 3,
+    fretCount: 20,
+    maxFingers: 4,
+    stringCount: 6,
+    hideUnmarkedNotes: false,
   },
   getters: {
-    fretboardSize: state => state.fretboardSize, 
-    fretSize: state => state.fretSize,
+    //SIMPLE
+    diapasonColor: state=> state.diapasonColor,
+    fretbarWidth: state => state.fretbarWidth,
+    fretbarColor: state => state.fretbarColor,
+    fretboardSize: state => state.fretboardSize,
+    fretCount: state => state.fretCount,
+    stringColor: state => state.stringColor,
+    stringCount: state => state.stringCount,
     stringHeight: state => state.stringHeight,
-    fretHeight: state => state.fretSize.height,
-    fretWidth: state => state.fretSize.width,
-    fretbarWidth: state => state.fretSize.barWidth
+    toneColor: state => state.toneColor,
+    toneSize: state => state.toneSize,
+    toneRoundness: state => state.toneRoundness,
 
+    //COMPLEX
   },
+  
   mutations: {
-    SET_FRET_SIZE(state, fretCount) {
-      state.fretSize.width = state.fretboardSize.width / fretCount;
-      // state.fretSize.height = state.fretboardSize.height / fretCount; 
-    },
-    SET_FRET_HEIGHT(state, value) {
-      state.fretSize.height = value;
-      // state.fretSize.height = state.fretboardSize.height / fretCount; 
-    },
-    SET_FRETBOARD_SIZE(state) {
-      state.fretboardSize.height = window.innerHeight * fbRatio;
-      state.fretboardSize.width = window.innerWidth * fbRatio;
-    },
     SET_COLOR(state, payload) {
       state[payload.wich + 'Color'] = payload.color;
     },

@@ -26,5 +26,5 @@ export default new Vuex.Store({
   },
   actions: {
   },
-  plugins: [vuexPersist.plugin]
+  // plugins: [vuexPersist.plugin]
 })

@@ -1,136 +1,95 @@
 <template>
-  
-    <div class="fret-group">
-      <fret-tone 
-        :index="index"
-        :string-index="stringIndex"
-        :root="root"
-        :fretSize="fretSize"
-        class="fret-tone"
-      ></fret-tone>
-      <div 
-        :style="diapasonStyle('top')"
-      ></div>
+  <div
+    :style="fretStyle"
+    class="d-flex align-center"
+    @dblclick.prevent="toggleVisibility"
+  >
+    <transition name="scale-transition">
       <div
-        :style="stringStyle()"
+        v-if="visible" 
+        :style="toneStyle"
       ></div>
-      <div 
-        :style="diapasonStyle('bottom')"
-      ></div>
-      
-    </div>
+    </transition>
+  </div>
 </template>
 
 <script>
-  import FretTone from "@/components/FretTone.vue";
+  import { mapGetters } from 'vuex'
   export default {
-    components: {
-      FretTone
-    },
     props: {
-      marker: {
-        type: String,
-        default: undefined
-      },
-      tone: {
-        type: String,
-        default: ''
-      },
-      index: {
+      width: {
         type: Number,
         default: 0
       },
-      stringIndex: {
+      height: {
         type: Number,
-        default: 0
+        default: 0,
       },
-      root: {
-        type: Boolean,
-        default: false
-      },
+      indices: {
+        type: Object,
+        default: () => {return {string: 0, fret: 0 }}
+      }
     },
+
     computed: {
-      top() {
-        return this.stringIndex == 0
-      },
-      bottom() {
-        let strings = this.$store.state.stringCount;
-        return this.stringIndex == strings - 1
-      },
-      fretSize() {
-        return this.$store.getters['fretboard/fretSize']
-      },
-      stringHeight() {
-        return this.$store.getters['fretboard/stringHeight']
-      },
-      diapasonColor() {
-        return this.$store.state.fretboard.diapasonColor
-      },
-      fretbarColor() {
-        return this.$store.state.fretboard.fretbarColor
-      },
-      stringColor() {
-        return this.$store.state.fretboard.stringColor
-      },
-      hidden() {
-        return this.index == 0
-      },
-      winSize() {
-        return window.width + '-' + window.height
-      }  
-    },
-    methods: {
-      diapasonStyle(edge) {
-        let height = this.fretSize.height;
-        let isHidden = this.hidden
-          || (edge == 'top' && this.top)
-          || (edge == 'bottom' && this.bottom)
+      ...mapGetters({
+        defaultColor: 'fretboard/toneColor',
+        note: 'tone/getNote'
+      }),
+
+      fretStyle() {
         let style = {
-          width: `${this.fretSize.width}px!important`,
-          height: `${height}px!important`,
-          borderStyle: isHidden ? 'hidden':'solid',
-          borderWidth: `0px ${this.fretSize.barWidth}px`,
-          borderColor: this.fretbarColor,
-          backgroundColor: isHidden ? 'rgba(1, 0, 0, 0)': `${this.diapasonColor}`
+          width: `${this.width}px`,
+          height: `${this.height}px`,
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          cursor: 'pointer'
         }
         return style
       },
-      stringStyle(){
-        return {
-          width: `${this.fretSize.width}px!important`,
-          height: `${this.stringHeight}px!important`,
-          backgroundColor: this.hidden ? 'rgba(1, 0, 0, 0)' : this.stringColor
-        }
+
+      color() {
+        return this.defaultColor
       },
+      toneStyle(){
+        let size = this.$store.getters['fretboard/toneSize'];
+        let color = this.color
+        let roundness = this.$store.getters['fretboard/toneRoundness'];
+        let style = {
+          width: `${size}px`,
+          height: `${size}px`,
+          borderRadius: `${roundness}px`,
+          backgroundColor: color,
+          margin: 'auto',
+          position: 'relatve'
+        }
+        return style
+      },
+      visible(){
+        return this.isVisible
+      }
     },
+    data() {
+      return {
+        isVisible: true
+      }
+    },
+    methods: {
+      toggleVisibility() {
+        this.isVisible = !this.isVisible
+      }
+    }
   }
 </script>
 
 <style lang="sass" scoped>
-.fret-group
-  display: inline-block
-  vertical-align: top
+.scale-transition-enter-active
+  transition: all .2s ease-in
+
+.scale-transition-leave-active
+  transition: all .2s ease-out
 
 
-.diapason-color
-  background-color: map-get($diapason, color)
-
-.fret-color
-  background-color: map-get($fret, color)
-
-.hidden-fret
-  background-color: rgba(1, 0, 0, 0)
-
-.string-color
-  background-color: map-get($string, color)
-
-.fret-tone
-  position: absolute!important
-  z-index: 1
-
-.top-edge
-  padding-top: map-get($diapason, height)!important
-  
+.scale-transition-enter,
+.scale-transition-leave-to
+  transform: scale(0)
 </style>
-
-
