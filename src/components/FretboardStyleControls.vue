@@ -13,11 +13,11 @@
     />
     
     <div class="mt-6">
-      <v-slider
+      <custom-slider
         v-for="(slider, index) in sliders"
-        
         :key="index"
-        v-model="slider.model"
+        :model="slider.model"
+        :module="slider.module"
         :label="slider.label"
         :min="slider.min"
         :max="slider.max"
@@ -28,10 +28,12 @@
 </template>
 
 <script>
-import ColorPicker from '@/components/ColorPicker'
+  import ColorPicker from '@/components/ColorPicker'
+  import CustomSlider from '@/components/CustomSlider'
   export default {
     components: {
-      ColorPicker
+      ColorPicker,
+      CustomSlider
     },
     computed: {
       stringHeight: {
@@ -67,16 +69,17 @@ import ColorPicker from '@/components/ColorPicker'
         }
       }
     },
+
     data() {
       return {
-        sliders: [
-          {label:"Tamaño de Puntos", model: this.toneSize, min: 2, max: 100, step: 0.5},
-          {label:"Grosor de cuerdas", model: this.stringHeight, min: 1, max: 10, step: 0.5},
-          {label:"Grosor de trastes", model: this.fretbarSize, min: 1, max: 8, step: 0.5},
-          {label:"Altura de trastes", model: this.fretHeight, min: 10, max: 40, step: 0.5},
-        ],
         borderColor: '#212121',
         labelColor: 'white',
+        sliders: [
+          {label:"Tamaño de Puntos", model: 'toneSize', module: 'tone', min: 2, max: 100, step: 0.5},
+          {label:"Grosor de cuerdas", model: 'stringHeight', module: 'fretboard', min: 1, max: 10, step: 0.5},
+          {label:"Grosor de trastes", model: 'fretbarWidth',  module: 'fretboard', min: 1, max: 8, step: 0.5},
+          {label:"Altura de trastes", model: 'fretHeight',  module: 'fretboard', min: 10, max: 40, step: 0.5},
+        ],
         colorPickers: [
           {model: 'diapason', storeModule: "fretboard", label: 'Diapasón'},
           {model: 'string', storeModule: "fretboard", label: 'Cuerdas'},
@@ -87,7 +90,9 @@ import ColorPicker from '@/components/ColorPicker'
       }
     },
     methods: {
-
+      getComputed(wich) {
+        return this[wich]
+      }
     }
   }
 </script>

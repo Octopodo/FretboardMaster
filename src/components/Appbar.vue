@@ -7,7 +7,7 @@
       <v-toolbar-title>Fretboard Master</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn icon  @click.prevent="drawer = !drawer">
+      <v-btn icon  @click.prevent="drawer = true">
         <v-icon>mdi-settings</v-icon>
       </v-btn>
       
@@ -20,10 +20,14 @@
         temporary
         hide-overlay
         right
-        width="600"
+        width="400"
         color="black"
         dark
-      >
+      > 
+
+        <v-btn icon @click.prevent="drawer = false" class="ma-6" style="position: absolute; right:0px">
+          <v-icon color="white">mdi-arrow-collapse-right</v-icon>
+        </v-btn>
         <fretboard-style-controls/>
       </v-navigation-drawer>
   </div>

@@ -3,6 +3,7 @@
     <v-treeview 
       class="custom-treeview"
       activatable
+      open-all
       dense
       :active="[active]"
       :hoverable="true"

@@ -97,6 +97,7 @@ export default {
     }
   },
   getters: {
+    toneSize: state => state.toneSize,
     getScaleTone(state) {
       return index => {
         return state.currentScale.notes[index]

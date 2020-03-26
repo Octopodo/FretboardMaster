@@ -25,7 +25,10 @@ export default {
   getters: {
     fretboardSize: state => state.fretboardSize, 
     fretSize: state => state.fretSize,
-    stringHeight: state => state.stringHeight 
+    stringHeight: state => state.stringHeight,
+    fretHeight: state => state.fretSize.height,
+    fretWidth: state => state.fretSize.width,
+    fretbarWidth: state => state.fretSize.barWidth
 
   },
   mutations: {
@@ -49,6 +52,9 @@ export default {
     },
     SET_FRETBAR_SIZE(state, value) {
       state.fretSize.barWidth = value 
+    },
+    SET_FRETBAR_WIDTH(state, value) {
+      state.fretSize.barWidth = value
     }
   },
   actions: {
