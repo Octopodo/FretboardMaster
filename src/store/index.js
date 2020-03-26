@@ -2,7 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import ToneModule from '@/store/tone-module'
 import FretboardModule from '@/store/fretboard-module'
+import VuexPersistence from 'vuex-persist'
 Vue.use(Vuex)
+
+const vuexPersist = new VuexPersistence({
+  storage: window.localStorage
+})
 
 export default new Vuex.Store({
   modules: {
@@ -21,4 +26,5 @@ export default new Vuex.Store({
   },
   actions: {
   },
+  plugins: [vuexPersist.plugin]
 })
