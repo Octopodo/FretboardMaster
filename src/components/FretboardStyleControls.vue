@@ -75,10 +75,10 @@
         borderColor: '#212121',
         labelColor: 'white',
         sliders: [
-          {label:"Tamaño de Puntos", model: 'toneSize', module: 'tone', min: 2, max: 100, step: 0.5},
+          {label:"Tamaño de Puntos", model: 'toneSize', module: 'fretboard', min: 2, max: 100, step: 0.5},
           {label:"Grosor de cuerdas", model: 'stringHeight', module: 'fretboard', min: 1, max: 10, step: 0.5},
           {label:"Grosor de trastes", model: 'fretbarWidth',  module: 'fretboard', min: 1, max: 8, step: 0.5},
-          {label:"Altura de trastes", model: 'fretHeight',  module: 'fretboard', min: 10, max: 40, step: 0.5},
+          {label:"Altura de trastes", model: 'fretboardHeight',  module: 'fretboard', min: 80, max: 400, step: 0.5},
         ],
         colorPickers: [
           {model: 'diapason', storeModule: "fretboard", label: 'Diapasón'},

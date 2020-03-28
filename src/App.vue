@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     handleResize(){
-      this.$store.dispatch('fretboard/setFretboardSize')
+      this.$store.commit('fretboard/SET_FRETBOARD_WIDTH')
     },
   }
 }
