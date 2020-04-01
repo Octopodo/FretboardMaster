@@ -20,12 +20,13 @@ export default {
     Appbar
   },
   created() {
+    this.$store.dispatch('tone/generatePositions')
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
   },
   methods: {
     handleResize(){
-      this.$store.commit('fretboard/SET_FRETBOARD_WIDTH')
+      this.$store.dispatch('fretboard/setFretboardSize')
     },
   }
 }

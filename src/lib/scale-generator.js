@@ -244,6 +244,24 @@ export default {
     return indices
   },
 
+  generatePositions(fingers, baseScale, fretboard){
+    let string;
+    let strings = [];
+    let positions = [];
+    let pivots = [];
+    let scale = this.arrangeScaleOctaves(baseScale)
+    let rootString = fretboard[fretboard.length - 1];
+    for (var i = 0; i < fretboard.length; i++) {
+      pivots.push(0)
+    }
+    
+    
+
+  
+
+  },
+
+
   findNote(stringIndex, index, positions, matrix) {
     let isNote = false;
     for(var p = 0; p < positions.length; p++) {

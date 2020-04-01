@@ -1,22 +1,21 @@
 <template>
-  <div>
-    <v-slider
-      v-model="value"
-      :label="label"
-      :min="min"
-      :max="max"
-      :step="step"
-    />
-  </div>
+  <v-slider
+    v-model="value"
+    :label="label"
+    :min="min"
+    :max="max"
+    :step="step"
+    :style="style"
+  />
 </template>
 
 <script>
-  import {toUpperKebab} from '@/lib/utils.js'
+  import {toSnakeCase} from '@/lib/utils.js'
   export default {
     props: {
       label: {
         type: String,
-        default: ''
+        default: undefined
       },
       min: {
         type: Number,
@@ -41,19 +40,31 @@
       mutation: {
         type: String,
         default: undefined
-      }
+      },
+      width: {
+        type: Number,
+        default: 50
+      },
     },
     computed: {
       value: {
         get() {
-          let getter = !this.module ? this.model : `${this.module}/${this.model}`;
-          return this.$store.getters[getter]
+          let getter = !this.module ? 'get' : `${this.module}/get`;
+          return this.$store.getters[getter](this.model)
         },
         set(value) {
-          let mutation = !this.mutation ? `SET_${toUpperKebab(this.model)}` : this.mutation;
+          let prop = toSnakeCase(this.model).split('_');
+          prop = prop[prop.length - 1].toUpperCase()
+          let mutation = !this.mutation ? `SET` : this.mutation;
           mutation = !this.module ? mutation : `${this.module}/${mutation}`;
-          this.$store.commit(mutation, value)
+          this.$store.commit(mutation, {wich: this.model, value: value})
         }
+      },
+      style() {
+        let style = {
+          maxWidth: `${this.width}px`
+        }
+        return style
       }
     }
   }

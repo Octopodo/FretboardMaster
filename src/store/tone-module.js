@@ -2,16 +2,18 @@
 import ScaleGenerator from '@/lib/scale-generator'
 import Fretboard from '@/lib/fretboard'
 import IntervalMaps from '@/note-maps/interval-map'
+import Vue from 'vue'
 ScaleGenerator.init()
 
 const chromaticScale = ScaleGenerator.make('chromatic', 'C', 13);
+const majorScale = ScaleGenerator.make('major', 'C', 13);
 const standartTunning = [
-  {tone:'E', oct: 4, fret: 0},
-  {tone:'B', oct: 3, fret: 0},
-  {tone:'G', oct: 3, fret: 0},
-  {tone:'D', oct: 3, fret: 0},
-  {tone:'A', oct: 2, fret: 0},
-  {tone:'E', oct: 2, fret: 0}, 
+  {tone:'E', oct: 4, fret: 0, grade: 3},
+  {tone:'B', oct: 3, fret: 0, grade: 7},
+  {tone:'G', oct: 3, fret: 0, grade: 5},
+  {tone:'D', oct: 3, fret: 0, grade: 2},
+  {tone:'A', oct: 2, fret: 0, grade: 6},
+  {tone:'E', oct: 2, fret: 0, grade: 3}, 
 ]
 
 export default {
@@ -20,13 +22,13 @@ export default {
     //SCALES
     availableTones: ScaleGenerator.sharps,
     chromaticScale: ScaleGenerator.chromaticScale(),
-    currentScale: ScaleGenerator.make('major', 'C', 13),
+    currentScale: majorScale,
     currentScaleId: 'major',
     currentTone: 'C',
     intervalsMap: IntervalMaps.map,
     scales: ScaleGenerator.scales,
     activePositions: [],
-    fretboard: new Fretboard('standart', 20, chromaticScale),
+    fretboard: new Fretboard('standart', 24, majorScale),
     positions: [],
     tunning: standartTunning,
     
@@ -79,9 +81,9 @@ export default {
       }
     },
 
-    getNote(state) {
+    getTone(state) {
       return (index, stringIndex) => {
-        return state.fretboard.matrix()[stringIndex][index]
+        return state.fretboard.matrix[stringIndex][index]
       }
     },
 
@@ -92,38 +94,41 @@ export default {
     },
 
     toneIsVisible(state) {
-      return (tone, index, stringIndex) => {
-        if(state.currentScale == [] || state.currentScale.notes.length == 0) {
-          return true
-        }
-        let isInPosition =  state.activePositions.length <= 0 || state.positions.length <= 0 ? true : false;
-        let isInScale = state.currentScale.notes.indexOf(tone) != -1;
-        if(isInScale && !isInPosition) {
+      return indices => {
+        let string = indices.string;
+        let fret = indices.fret;
+        let note = state.fretboard.matrix[string][fret];
+        let isInPosition = false 
+        if(state.activePositions.length > 0) {
           for(var p = 0; p < state.positions.length; p++) {
             let position = state.positions[p];
             if(state.activePositions.indexOf(position.number) == -1) {
               continue
             }
 
-            isInPosition = position.matrix[stringIndex].indexOf(index) != -1;
+            isInPosition = position.matrix[string].indexOf(fret) != -1;
             if(isInPosition) {
+              note.visible = true
               break
             }
+            // isInPosition = 1
           }
-        } 
-        let isHidenNote = state.intervalsMap.find(interval => {
-            let steps = ScaleGenerator.getToneIntervals(tone, state.currentScale);
-            return interval.steps == steps && interval.visible
-        }) == undefined && state.hideUnmarkedNotes
-        return isInPosition && isInScale && !isHidenNote
+        }
+        return note.visible 
       }
     },
+
+    toneIsSelected(state) {
+      return indices => {
+        return state.fretboard.matrix[indices.string][indices.fret].selected 
+      }
+    }
     
   },
 
   mutations: {
     SET_ACTIVE_POSITIONS(state, value){
-      state.activePositions = value
+      Vue.set(state, 'activePositions', value)
     },
 
     SET_ALL_FRET_COLORS(state, color) {
@@ -152,20 +157,16 @@ export default {
     },
 
     SET_FRETBOARD(state) {
-      let fretboard = new Fretboard(state.tunning, 20, state.currentScale);
-      state.fretboard = fretboard
+      state.fretboard = new Fretboard(state.tunning, 20, state.currentScale);
     },
 
     SET_HIDE_UNMARKED_NOTES(state, value) {
       state.hideUnmarkedNotes = value
     },
 
-    SET_TONE_TEXT_COLOR(state, payload) {
-      state.toneTextColor = payload.color
-    },
 
-    SET_POSITIONS(state) {
-      state.positions = ScaleGenerator.generatePositions(state.fingerCount, state.currentScale.notes, state.fretboard.matrix())
+    SET_POSITIONS(state, fingerCount) {
+      state.positions = ScaleGenerator.generatePositions(fingerCount, state.currentScale.notes, state.fretboard.matrix)
 
     },
 
@@ -173,10 +174,13 @@ export default {
       state.currentTone = state.availableTones[index]
     },
     
-    SET_TONE_SIZE(state, value) {
-      state.toneSize = value;
-      state.toneRoundness = value * 2;
-      state.toneFontSize = (value + 4) / 2
+
+    SWITCH_TONE_SELECTION(state, indices) {
+      state.fretboard.switchFretValue('selected',indices.string, indices.fret, indices.value)
+    },
+
+    SWITCH_TONE_VISIBILITY(state, indices) {
+      state.fretboard.switchFretValue('visible', indices.string, indices.fret, indices.value)
     }
   },
  
@@ -197,6 +201,9 @@ export default {
     changeFingerCount({commit}, value) {
       commit('SET_FINGER_COUNT', value)
       commit('SET_POSITIONS')
+    },
+    generatePositions({commit, rootGetters}) {
+      commit('SET_POSITIONS', rootGetters['fretboard/fingerCount'])
     }
   }
 }

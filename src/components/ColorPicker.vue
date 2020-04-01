@@ -1,21 +1,20 @@
 <template>
-  <div>
-    <v-row>
+    <v-row :style="{height: `${height}px`, maxWidth: '300px!important'}" class="ml-0">
       <v-menu
         :dark="dark"
         :close-on-content-click="false"
+
       >
-        <template v-slot:activator="{ on }">
+        <template v-slot:activator="{ on }" >
           <div :style="boxStyle" v-on="on" />
         </template>
         <v-color-picker v-model="color">
         </v-color-picker>
       </v-menu>
-      <div :style="labelStyle" dark>
+      <div v-if="label" :style="labelStyle" dark class="d-flex align-end">
         {{label}}
       </div>
     </v-row>
-  </div>
 </template>
 
 <script>
@@ -27,7 +26,7 @@
       },
       label: {
         type: String,
-        default: ''
+        default: undefined
       },
       module: {
         type: String,
@@ -48,6 +47,14 @@
       labelColor: {
         type: String,
         default: 'rgba(0, 0, 0, 0.6)'
+      },
+      width: {
+        type: Number,
+        default: 50
+      },
+      height: {
+        type: Number,
+        default: 30
       }
     },
     computed: {
@@ -67,20 +74,19 @@
       boxStyle() {
         let color = this.color;
         return {
-          'background-color': color + '!important',
-          'cursor': 'pointer',
-          'border': `4px solid ${this.borderColor}`,
-          height: '30px',
-          width: '50px',
+          backgroundColor: color ,
+          cursor: 'pointer',
+          border: `4px solid ${this.borderColor}`,
+          height: `${this.height}px`,
+          width: `${this.width}px`,
+          // display:'inline-block',
         }
       },
       labelStyle() {
         return {
           marginLeft: '10px',
-          marginTop: 'auto',
-          marginBottom: 'auto',
+          verticalAlign: 'center',
           color: this.labelColor
-
         }
         
       }

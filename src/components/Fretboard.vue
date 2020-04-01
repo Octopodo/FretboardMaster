@@ -3,34 +3,57 @@
     <v-row>
       <div :style="bareStyle"></div>
       <div :style="fretboardStyle">
-        <v-row>
+        <div :style="{position: 'absolute', width: `${size.width}px`}">
           <div
             v-for="i in fretCount"
-            :key="i"
-            :style="fretbarStyle(i)"
+            :key="`X-${i}`"
+            :style="fretbarStyle(i - 1)"
           ></div>
-        </v-row>
+        </div>
+
+        <!-- DOTS -->
+        <div style="position: absolute">
+          <div
+            v-for="(i, index) in dots"
+            :key="`A-${index}`"
+            :style="dotStyle(i, 3)"
+          ></div>
+        </div>
+        <div style="position: absolute">
+          <div
+            v-for="(i, index) in doubleDots"
+            :key="`B-${index}`"
+            :style="dotStyle(i, 1.7)"
+          ></div>
+          <div
+            v-for="(i, index) in doubleDots"
+            :key="`C-${index}`"
+            :style="dotStyle(i, 4.3)"
+          ></div>
+        </div>
+
+        <!-- STRINGS -->
         <div
           v-for="i in stringCount"
-          :key="i"
+          :key="`D-${i}`"
           :style="stringStyle(i)"
         ></div>
       </div>
       <div
-        :style="{position: 'absolute', marginLeft:`${fretbarWidth * 1.5}px`}"
+        :style="{position: 'absolute', marginLeft:`${fretbarWidth * 2}px`}"
       >
         <div
-          
-          v-for="f in fretCount"
-          :key="f"
+          v-for="s in stringCount"
+          :key="`F-${s}`"
         >
           <fret
-            v-for="s in stringCount"
-            :key="s"
-            :width="fretSize.width"
-            :height="fretSize.height"
-            :indices="{string: s, fret: f}"
-            :style="fretStyle(s, f)"
+            v-for="f in fretCount"
+            :key="`G-${f}`"
+            :width="getFretWidth(f - 1)"
+            :height="fretHeight"
+            :indices="{string: s - 1, fret: f}"
+            :style="fretStyle(s - 1, f - 1)"
+            :string-height="stringHeight"
           />
         </div>
       </div>
@@ -51,19 +74,18 @@
       ...mapGetters({
         fretbarColor: 'fretboard/fretbarColor',
         fretCount: 'fretboard/fretCount',
+        fretDistances: 'fretboard/fretDistances',
+        fretdotSize: 'fretboard/fretdotSize',
+        fretdotColor: 'fretboard/fretdotColor',
         fretbarWidth: 'fretboard/fretbarWidth',
         stringCount: 'fretboard/stringCount',
         stringHeight: 'fretboard/stringHeight', 
       }),
 
       //CALCULATIONS
-      fretSize() {
-        let width = this.size.width / this.fretCount + this.fretbarWidth;
-        let height = this.size.height / (this.stringCount - 1);
-        return {
-          width: width,
-          height:height
-        }
+      fretHeight() {
+        return  this.size.height / (this.stringCount - 1);
+      
       },
 
       size() {
@@ -101,30 +123,50 @@
 
     data() {
       return {
-        fretPoints: [3, 5, 7, 9, 15, 17, 19, 21]
+        dots: [3, 5, 7, 9, 15, 17, 19, 21],
+        doubleDots: [12],
       }
     },
 
     methods: {
+      dotStyle(fret, string) {
+        let size = this.fretdotSize;
+        let xOffset = this.getFretCenter(fret -1) + this.getFretWidth(fret - 1)/2 - 12
+        let yOffset = this.size.height/this.stringCount * (string) - (size/2 - this.stringHeight);
+        let color = this.fretdotColor;
+        let style =  {
+          width: `${size}px`,
+          height: `${size}px`,
+          borderRadius: '25px',
+          backgroundColor: this.color,
+          boxShadow: `${size}px ${size}px 0px ${size}px ${color} inset, 0px 0px 2px 2px rgba(0, 0, 0, 0.1)`,
+          marginLeft: `${xOffset}px`,
+          marginTop: `${yOffset}px`,
+          position: 'absolute'
+        }
+        return style
+      },
       fretbarStyle(index){
         let width = this.fretbarWidth/2;
-        let height = this.size.height;
-        let offset = this.size.width / (this.fretCount - 1) * (index -1) + width * 2;
+        let height = this.size.height + this.stringHeight;
+        const xOffset = this.fretDistances[index] 
         let style = {
           width: '0px',
           height: `${height}px`,
           backgroundColor: this.fretbarColor,
-          marginLeft: `${offset}px`,
+          marginLeft: `${xOffset}px`,
           paddingLeft: `${width}px`,
           paddingRight: `${width}px`,
+          boxShadow:'2px 0 3px rgba(255, 255, 255, 0.6) inset ',
+          display: 'inline-block',
           position: 'absolute',
-          boxShadow:'2px 0 3px rgba(255, 255, 255, 0.6) inset '
         }
         return style
       },
       fretStyle(string, fret) {
-        let xOffset = this.size.width / (this.fretCount - 1) * (fret -1) - this.fretSize.width + this.fretbarWidth;
-        let yOffset = this.fretSize.height * (string -1) - this.fretSize.height/2;
+
+        let xOffset = this.getFretCenter(fret)
+        let yOffset = this.fretHeight * (string) - this.fretHeight/2;
         let style = {
           marginTop: `${yOffset}px`,
           marginLeft: `${xOffset}px`,
@@ -150,15 +192,22 @@
         }
         return style
       },
+
+      getFretCenter(index) {
+        let last = this.fretDistances[index - 1] || 0;
+        let fretWidth = this.fretDistances[index] - last;
+        let center = last + fretWidth/2
+        return last
+      },
+      getFretWidth(index) {
+        let last = this.fretDistances[index - 1] || 0;
+        let fretWidth = this.fretDistances[index] - last;
+        return fretWidth + this.fretbarWidth
+      }
     }
   }
 </script>
 
 <style lang="sass" scoped>
-.string-container
-  line-height: 0px!important
-  grid-template-rows: map-get
 
-.scale-notes
-  width: 600px!important
 </style>

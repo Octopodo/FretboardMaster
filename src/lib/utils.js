@@ -1,6 +1,7 @@
 
-function toUpperKebab(str) {
-  return str.split(/(?=[A-Z])/).join('_').toUpperCase()
+function toSnakeCase(str, upper) {
+  let name = str.split(/(?=[A-Z])/).join('_')
+  return upper ? name.toUpperCase() : name.toLowerCase()
 }
 
 
@@ -29,4 +30,4 @@ function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-export {toUpperKebab, hexToRgb, rgbToHex}
+export {toSnakeCase, hexToRgb, rgbToHex}

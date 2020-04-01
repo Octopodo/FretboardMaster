@@ -1,30 +1,36 @@
 <template>
-  <div class=" py-6 px-12">
-    <color-picker
-      class="my-2"
-      v-for="(color, index) in colorPickers"
+  <div class="mt-12">
+    <div
+      v-for="(control, index) in controls"
       :key="index"
-      :model="color.model"
-      :module="color.storeModule"
-      :label="color.label"
-      :border-color="borderColor"
-      :label-color="labelColor"
-      :mutation="color.mutation"
-    />
-    
-    <div class="mt-6">
-      <custom-slider
-        v-for="(slider, index) in sliders"
-        :key="index"
-        :model="slider.model"
-        :module="slider.module"
-        :label="slider.label"
-        :min="slider.min"
-        :max="slider.max"
-        :step="slider.step"
-      />
+      class="ml-12"
+    >
+      <!-- <div class="white--text">
+        {{control.label}}
+      </div> -->
+      <div class="ml-0">
+        <color-picker
+          label-color="white"
+          :label="control.label"
+          :model="control.color.model"
+          :module="module"
+          :border-color="borderColor"
+          :mutation="control.color.mutation"
+        />
+        
+        <custom-slider
+          :model="control.size.model"
+          :module="module"
+          :min="control.size.min"
+          :max="control.size.max"
+          :step="control.size.step"
+          width="250"
+          
+        />
+      </div>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -36,63 +42,52 @@
       CustomSlider
     },
     computed: {
-      stringHeight: {
-        get() {
-          return this.$store.state.fretboard.stringHeight
-        },
-        set(value){
-          this.$store.commit('fretboard/SET_STRING_HEIGHT', value)
-        }
-      },
-      fretbarSize: {
-        get() {
-          return this.$store.state.fretboard.fretSize.barWidth
-        },
-        set(value){
-          this.$store.commit('fretboard/SET_FRETBAR_SIZE', value)
-        }
-      },
-      fretHeight: {
-        get() {
-          return this.$store.state.fretboard.fretSize.height
-        },
-        set(value){
-          this.$store.commit('fretboard/SET_FRET_HEIGHT', value)
-        }
-      },
-      toneSize: {
-        get() {
-          return this.$store.state.tone.toneSize
-        },
-        set(value){
-          this.$store.commit('tone/SET_TONE_SIZE', value)
-        }
-      }
     },
 
     data() {
       return {
         borderColor: '#212121',
+        module: 'fretboard',
         labelColor: 'white',
-        sliders: [
-          {label:"Tamaño de Puntos", model: 'toneSize', module: 'fretboard', min: 2, max: 100, step: 0.5},
-          {label:"Grosor de cuerdas", model: 'stringHeight', module: 'fretboard', min: 1, max: 10, step: 0.5},
-          {label:"Grosor de trastes", model: 'fretbarWidth',  module: 'fretboard', min: 1, max: 8, step: 0.5},
-          {label:"Altura de trastes", model: 'fretboardHeight',  module: 'fretboard', min: 80, max: 400, step: 0.5},
+        controls: [
+          {
+            label: 'Puntos',
+            size: { model: 'toneSize', min: 2, max: 100, step: 0.5 },
+            color: {model: 'tone'}
+          },
+          {
+            label: 'Cuerdas',
+            size: { model: 'stringHeight',  min: 1, max: 10, step: 0.5 },
+            color:{model: 'string'}
+          },
+          {
+            label: 'Trastes',
+            size: { model: 'fretbarWidth',  min: 1, max: 8, step: 0.5 },
+            color: { model: 'fretbar'}
+          },
+          {
+            label: 'Mástil',
+            size: { model: 'fretboardHeight', min: 80, max: 400, step: 0.5 },
+            color: {model: 'diapason' },
+          },
+          {
+            label: 'Notación',
+            size:{model: 'tonefontSize',  mutation: "SET_TONE_TEXT_COLOR"},
+            color: {model: 'toneText'}
+          }
+          
+          
         ],
         colorPickers: [
-          {model: 'diapason', storeModule: "fretboard", label: 'Diapasón'},
-          {model: 'string', storeModule: "fretboard", label: 'Cuerdas'},
-          {model: 'fretbar', storeModule: "fretboard", label: 'Trastes'},
-          {model: 'toneText', storeModule: "tone", label: 'Letras', mutation: "SET_TONE_TEXT_COLOR"},
+          
+          
+          
+          
         ]
 
       }
     },
     methods: {
-      getComputed(wich) {
-        return this[wich]
-      }
     }
   }
 </script>

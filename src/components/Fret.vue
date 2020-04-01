@@ -9,7 +9,12 @@
         v-if="visible" 
         :style="toneStyle"
         @click.prevent="toggleSelection"
-      ></div>
+        class="d-flex align-center justify-center"
+      >
+        <div class="unselectable">
+          {{this.tone.tone}}  
+        </div>
+      </div>
     </transition>
     
   </div>
@@ -31,14 +36,28 @@
         type: Object,
         default: () => {return {string: 0, fret: 0 }}
       },
+      stringHeight: {
+        type: Number,
+      }
     },
 
     computed: {
       ...mapGetters({
         defaultColor: 'fretboard/toneColor',
-        note: 'tone/getNote' 
+        textColor: 'fretboard/toneTextColor',
       }),
+      tone() {
+        let stop = this.$store.getters['tone/getTone'](this.indices.fret , this.indices.string);
+        return this.$store.getters['tone/getTone'](this.indices.fret , this.indices.string )
+      },
 
+      selected(){
+          return this.$store.getters['tone/toneIsSelected'](this.indices)
+      },
+
+      visible() {
+        return this.$store.getters['tone/toneIsVisible'](this.indices)
+      },  
       selectedColor() {
         return this.$store.getters['fretboard/toneSelectedColor']('rgb')
       },
@@ -47,7 +66,7 @@
         let style = {
           width: `${this.width}px`,
           height: `${this.height}px`,
-          backgroundColor: 'rgba(1, 0, 0, 0)',
+          backgroundColor: 'rgba(255, 0, 0, 0)',
           cursor: 'pointer',
         }
         return style
@@ -69,9 +88,10 @@
           height: `${size}px`,
           borderRadius: `${roundness}px`,
           backgroundColor: color,
+          color: this.textColor,
           margin: 'auto',
           position: 'relatve',
-          boxShadow: this.isSelected ? `${selectedColor}, ${relieve}` : relieve
+          boxShadow: this.selected ? `${selectedColor}, ${relieve}` : relieve
         }
         return style
       },
@@ -85,42 +105,39 @@
         return style
       },
 
-      visible(){
-        console.log(this.isVisible)
-        return this.isVisible
-      }
+
     },
     data() {
       return {
-        isVisible: true,
-        isSelected: false,
         timer: 0,
-        delay: 150,
+        delay: 50,
         prvent: false
       }
     },
     methods: {
       toggleVisibility() {
         clearTimeout(this.timer);
+        let payload = {fret: this.indices.fret, string: this.indices.string, value: false}
         this.prevent = true;
-        this.isVisible = !this.isVisible
-        this.isSelected = false
+        this.$store.commit('tone/SWITCH_TONE_VISIBILITY', this.indices)
+        this.$store.commit('tone/SWITCH_TONE_SELECTION', payload)
       },
       toggleSelection() {
         
         this.timer = setTimeout(() => {
           if (!this.prevent) {
-            this.isSelected = !this.isSelected
+            this.$store.commit('tone/SWITCH_TONE_SELECTION', this.indices)
           }
           this.prevent = false;
         }, this.delay);
-        console.log('SELECTED', this.isSelected)
       }
     }
   }
 </script>
 
 <style lang="sass" scoped>
+.unselectable
+  user-select: none
 .scale-transition-enter-active
   transition: all .2s ease-in
 
