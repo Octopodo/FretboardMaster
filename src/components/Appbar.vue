@@ -28,16 +28,16 @@
         <v-btn icon @click.prevent="drawer = false" class="ma-6" style="position: absolute; right:0px">
           <v-icon color="white">mdi-arrow-collapse-right</v-icon>
         </v-btn>
-        <fretboard-style-controls/>
+        <!-- <fretboard-style-controls/> -->
       </v-navigation-drawer>
   </div>
 </template>
 
 <script>
-  import FretboardStyleControls from '@/components/FretboardStyleControls'
+  // import FretboardStyleControls from '@/components/FretboardStyleControls'
   export default {
     components: {
-      FretboardStyleControls
+      // FretboardStyleControls
     },
     data() {
       return {

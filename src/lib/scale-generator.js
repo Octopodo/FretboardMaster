@@ -1,5 +1,5 @@
 import ScaleMaker from 'scale-maker'
-import Scales from '@/note-maps/scales.js'
+import Scales from '@/constants/scales.js'
 
 const sharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const flats = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -75,7 +75,8 @@ export default {
     let noteScale = new Scale(tonic)
     scale.notes = noteScale.interval(scale.inSemiTones);
     scale.usesFlats = noteScale.usesFlats;
-    scale.chromatic = noteScale.chromaticScale
+    scale.chromatic = noteScale.chromaticScale;
+    scale.definition = this.getScaleDef(scaleId)
     this.scaleLift(scale)
     return scale
   },
@@ -180,7 +181,7 @@ export default {
     return false
   },
 
-  generatePositions(fingers, baseScale, fretboard){
+  generatePositionsA(fingers, baseScale, fretboard){
     let string;
     let strings = [];
     let positions = [];

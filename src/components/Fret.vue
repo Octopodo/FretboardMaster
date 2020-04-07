@@ -12,7 +12,7 @@
         class="d-flex align-center justify-center"
       >
         <div class="unselectable">
-          {{this.tone.tone}}  
+          {{this.displayTone}}  
         </div>
       </div>
     </transition>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+  import {Note} from '@tonaljs/tonal'
   import { mapGetters } from 'vuex'
   export default {
     props: {
@@ -46,18 +47,23 @@
         defaultColor: 'fretboard/toneColor',
         textColor: 'fretboard/toneTextColor',
       }),
-      tone() {
-        let stop = this.$store.getters['tone/getTone'](this.indices.fret , this.indices.string);
-        return this.$store.getters['tone/getTone'](this.indices.fret , this.indices.string )
+      displayTone() {
+        return Note.pitchClass(this.pitch.note)
+      },
+      pitch() {
+        let pitch = this.$store.getters['tone/getPitch']( this.indices.string, this.indices.fret);
+        return pitch
       },
 
       selected(){
-          return this.$store.getters['tone/toneIsSelected'](this.indices)
+          return false//this.$store.getters['tone/toneIsSelected'](this.indices)
       },
 
       visible() {
-        return this.$store.getters['tone/toneIsVisible'](this.indices)
-      },  
+        let pitch = this.pitch;
+        return this.pitch.scales.length > 0
+      },
+
       selectedColor() {
         return this.$store.getters['fretboard/toneSelectedColor']('rgb')
       },

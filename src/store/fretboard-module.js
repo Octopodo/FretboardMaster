@@ -1,5 +1,5 @@
 import { rgbToHex, hexToRgb } from '@/lib/utils.js' 
-import FretConstants from '@/note-maps/fret-constants.js'
+import FretConstants from '@/constants/fret-constants.js'
 import Vue from 'vue'
 
 const fbRatio = 0.8;
@@ -98,6 +98,10 @@ export default {
     setFretboardSize({commit, rootGetters}) {
       commit('SET_FRETBOARD_WIDTH')
       commit('SET_FRET_DISTANCES');
+    },
+    initialize({commit, rootState}) {
+      const fretboard = rootState.fretboard
+      commit('SET', {wich: 'fretCount', value: fretboard.FRETS_SHOWN})
     }
   },
 

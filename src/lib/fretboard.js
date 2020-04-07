@@ -1,112 +1,105 @@
-import IntervalsMap from "@/note-maps/interval-map.js";
+import _ from 'underscore';
+import { Scale, ScaleType, Note} from '@tonaljs/tonal'
+const ChromaticScale = require('@/constants/chromatic-scale.js').default
 
-const tunnings = {
-  standart:[
-  {tone:'E', oct: 4, fret: 0, grade: 3},
-  {tone:'B', oct: 3, fret: 0, grade: 7},
-  {tone:'G', oct: 3, fret: 0, grade: 5},
-  {tone:'D', oct: 3, fret: 0, grade: 2},
-  {tone:'A', oct: 2, fret: 0, grade: 6},
-  {tone:'E', oct: 2, fret: 0, grade: 3}, 
-  ]
-}
+const tunning = [
+  'E4',
+  'B3',
+  'G3',
+  'D3',
+  'A2',
+  'E2', 
+]
 
-export default function(newTunning, newFrets, scale) {
-  const frets = newFrets;
-  const tunning = newTunning instanceof Array? newTunning : tunnings[newTunning.toLowerCase()];
-  var intervals = scale.chromatic
-  this.matrix = [];
-
-  this.getFrets = function() {
-    return frets
-  },
-
-  this.switchFretValue = function(name, string, fret, value) {
-    this.matrix[string][fret][name] = !value ? !this.matrix[string][fret][name] : value
-  }
-
-  this.getStrings= function() {
-    return tunning.length
-  }
-
-  this.tunning = function() {
-    return tunning
-  }
-
-  this.tuneFret = function(tone, root){
-    let octCount = Math.floor(frets/scale.chromatic.length);
-    let rootStep = scale.chromatic.indexOf(root.tone);
-    let toneStep = scale.chromatic.indexOf(tone);
-    let fret = rootStep < toneStep ? toneStep - rootStep : scale.chromatic.length - toneStep - 1;
-    let oct = rootStep < toneStep ? root.oct : rootOct - 1;
-    let toneData = {
-      root: tone,
-      frets: [],
-      octaves: [],
-      grade: scale.indexOf(tone) + 1
+const Fretboard = function(tunning, fretCount, flats) {
+  this.tunning = tunning;
+  this.root = this.tunning[this.tunning.length - 1]
+  this.fretCount = fretCount + 1;
+  this.enharmonics = flats ? 'flats' : 'sharps';
+  this.spine = [];
+  this.matrix = []
+  this.scaleFrets = [];
+  this.scales = [];
+  
+  this.generateSpine = function() {
+    const firstFret = this.tunning[this.tunning.length - 1];
+    const firstOctave = Note.octave(firstFret);
+    const lastOctave = Note.octave(this.tunning[0]) + Math.floor(this.fretCount/12)
+    const chromatic = Scale.get(`${firstFret} chromatic`);
+    const notes = chromatic.notes;
+    const stringOctaves = Math.floor(this.fretCount / notes.length);
+    const octaves = lastOctave - firstOctave
+    const extra = this.fretCount - notes.length * stringOctaves
+    for(var oct = firstOctave; oct < lastOctave; oct++) {
+      let pitch = Note.get(firstFret).letter + oct;
+      let scale = Scale.get(`${pitch} chromatic`).notes;
+      this.spine = this.spine.concat(scale)
     }
-    for(let i = 1; i <= octCount; i++) {
-      toneData.fret.push(fret * i);
-      toneData.octaves.push(oct + i);
-    }
-    return toneData
+    let pitch = Note.get(firstFret).letter + (oct + 1);
+    let scale = Scale.get(`${pitch} chromatic`).notes.slice(0, extra);
+    this.spine = this.spine.concat(scale)
   }
 
-  this.tuneString = function(root, scale) {
-    let string = [];
-    for(var i = 0; i < intervals.length; i++) {
-      let root = intervals[i];
-
-    }
-  }
-
-  this.generate = function(scale) {
-    let map = IntervalsMap.map;
-    for(var t = 0; t < tunning.length; t++) {
-      let tune = tunning[t]
-      let string = [tune];
-      let oct = tune.oct;
-      let fret = intervals.indexOf(tune.tone);
-      let i = 0;
-      while(i < frets) {
+  this.generate = function() {
+    this.generateSpine();
+    for (var s = 0; s < this.tunning.length; s++) {
+      let root = this.tunning[s];
+      let string = [];
+      let fret = this.spine.indexOf(root);
+      for( let f = 0; f < this.fretCount; f++) {
+        let pitch = {
+          note: this.spine[fret],
+          scales: [1],
+          positions: [1]
+        }
+        string.push(pitch);
         fret++
-        oct =  fret >= intervals.length ? oct + 1 : oct
-        fret = fret >= intervals.length ? 0 : fret;
-        let grade = scale.notes.indexOf(intervals[fret]) + 1;
-        let visible = grade != 0;
-
-        let tone= {
-          tone: intervals[fret], 
-          oct: oct, 
-          fret: i + 1,
-          string: t,
-          grade: grade,
-          visible: visible,
-          selected: false,
-          // steps: step.steps
-        };
-        string.push(tone)
-        i++
       }
-      this.matrix.push(string);
+      this.matrix.push(string)
     }
-    this.print()
-    let stop = 0;
   }
 
-  this.print = function(value) {
-    let output = '';
-    for(var s = 0; s < this.matrix.length; s++) {
-      output += '||--';
-      for(var f = 0; f < this.matrix[s].length; f++) {
-        let fret = this.matrix[s][f];
-        let data = fret[value || 'tone'].toString();
-        output = data.length > 1 ? output + data + '--': output + `${data}---` 
+  this.addScale = function(scaleName) {
+    let scale = Scale.get(`${this.root} ${scaleName.toLowerCase}`);
+    this.scales.push(scale);
+    this.walk(function(fret) {
+      if(scale.notes.indexOf(fret.note) != -1 ) {
+        fret.scales.push(scaleName)
       }
-      output += '||\n'
-    }
-    console.log(output)
+    })
   }
 
-  this.generate(scale)
+  this.walk = function (callback) {
+    _.each(this.matrix, function(string) {
+      _.each(string, function(fret) {
+        callback(fret)
+      })
+    })
+  }
+
+  this.getPitch = function(string, fret) {
+    return this.matrix[string][fret]
+  }
+
+  this.getStringPitch = function(string, fret) {
+    return this.getPitch(this.tunning[string], fret)
+  }
+
+  this.clearScale = function () {
+    for (var i = 0; i < this.chromatic; i++) {
+      this.chromatic[i].inScale = false;
+    }
+  }
+
+  this.scaleTesting = function() {
+
+  }
+  this.scaleTesting()
+  this.generate()
+  var stop = 0;
 }
+
+export { Fretboard }
+
+
+

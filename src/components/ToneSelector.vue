@@ -10,7 +10,7 @@
           {{ item }} 
         </v-btn>
       </v-btn-toggle>
-      <v-row class="scale-notes d-flex justify-center">
+      <!-- <v-row class="scale-notes d-flex justify-center">
         <v-row
           v-for="(note, index) in scale"
           :key="index"
@@ -24,7 +24,7 @@
           </div>
         </v-row>
         
-      </v-row>
+      </v-row> -->
 
     </v-col>
     

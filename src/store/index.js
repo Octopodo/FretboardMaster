@@ -14,14 +14,6 @@ export default new Vuex.Store({
     tone: ToneModule,
     fretboard: FretboardModule
   },
-  state: {
-    fretCount: 20,
-    stringCount: 6,
-  },
-  getters: {
-    fretCount: state => state.fretCount,
-    stringCount: state => state.stringCount
-  },
   mutations: {
   },
   actions: {

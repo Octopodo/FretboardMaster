@@ -9,7 +9,7 @@
         <fretboard class="fretboard" />
         <tone-selector class="tone-selector"></tone-selector>
         <div class="divider"></div>
-        <options/>
+        <!-- <options/> -->
       </v-col>
       
     </v-row>
@@ -20,7 +20,7 @@
 <script>
 import Fretboard from "@/components/Fretboard";
 import ScaleSelector from "@/components/ScaleSelector"
-import Options from "@/components/Options"
+// import Options from "@/components/Options"
 import ToneSelector from '@/components/ToneSelector'
 
 export default {
@@ -29,7 +29,7 @@ export default {
     Fretboard,
     ScaleSelector,
     ToneSelector,
-    Options
+    // Options
   }
 }
 </script>

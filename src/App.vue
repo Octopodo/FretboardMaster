@@ -20,7 +20,7 @@ export default {
     Appbar
   },
   created() {
-    this.$store.dispatch('tone/generatePositions')
+    this.$store.dispatch('tone/initialize')
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
   },

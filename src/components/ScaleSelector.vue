@@ -5,6 +5,7 @@
       activatable
       open-all
       dense
+      :multiple-active="true"
       :active="[active]"
       :hoverable="true"
       :items="scales"
@@ -41,7 +42,7 @@
     },
     methods: {
       changeScale(items) {
-        this.$store.dispatch('tone/setCurrentScale', items[0])
+        this.$store.dispatch('tone/setScales', items)
       },
 
       getOpenedGroups(items) {
