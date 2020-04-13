@@ -1,12 +1,12 @@
 import { Fretboard } from '@/lib/fretboard.js'
 import ScaleGenerator from '@/lib/scale-generator'
 import IntervalMaps from '@/constants/interval-map'
+import Scales from '@/lib/scales-interface'
 import Vue from 'vue'
 import _ from 'underscore'
 ScaleGenerator.init()
 
 const chromaticScale = ScaleGenerator.make('chromatic', 'C', 13);
-const majorScale = ScaleGenerator.make('major', 'C', 13);
 const standartTunning = [
   'E4',
   'B3',
@@ -16,22 +16,24 @@ const standartTunning = [
   'E2', 
 ]
 
+const majorScale = Scales.getByName('C2', 'major')
 
 export default {
   namespaced: true,
   state: {
     //SCALES
+    activePositions: [],
+    activeScale: majorScale,
+    activeScales: [majorScale],
     availableTones: ScaleGenerator.sharps,
     chromaticScale: ScaleGenerator.chromaticScale(),
-    currentScaleId: 'major',
-    currentTone: 'C',
-    intervalsMap: IntervalMaps.map,
-    scales: ScaleGenerator.scales,
-    activePositions: [],
+    currentTone: 'C2',
     fretboard: undefined,
+    intervalsMap: IntervalMaps.map,
     positions: [],
+    scales: ScaleGenerator.scales,
     tunning: standartTunning,
-    activeScales: [majorScale],
+    userScales: []
   },
 
   getters: {
@@ -39,8 +41,23 @@ export default {
     toneSize: state => state.toneSize,
     stringCount: state=> state.stringCount,
     currentTone: state => state.currentTone,
+    userScales: state => state.userScales,
+    activeScale: state => state.activeScale,
+    
 
     //COMPLEX
+    getScaleType(state) {
+      return intervals => {
+        return intervals instanceof Array ? Scales.getTypeByIntervals(intervals) : Scales.getTypeByName(intervals)
+      }
+    },
+
+    getScale(state) {
+      return intervals => {
+        return intervals instanceof Array ? Scales.getByIntervals(state.currentTone, intervals) : Scales.getByName(state.currentTone, intervals)
+      }
+    },
+
     getCurrentScaleId(state) {
       return  scales => {
         return scales[state.currentScaleId] != undefined ? state.currentScaleId : undefined
@@ -57,14 +74,16 @@ export default {
   mutations: {
     NEW_FRETBOARD(state, fretCount) {
       state.fretboard= new Fretboard(state.tunning, fretCount);
-      // state.fretboard.fixScale(state.activeScales)
     },
 
-    ADD_SCALE(state, id) {
-      const newScale = ScaleGenerator.make(state.currentScaleId, state.currentTone, 13);
-      state.maxFingers = state.fingerCount = newScale.fingers
-      state.activeScales.push(newScale)
+    ADD_SCALE(state, scale) {
+      state.activeScales.push(scale)
     },
+
+    CURRENT_SCALE(state, scale) {
+      state.currentScale = scale
+    },
+
     SET_SCALES(state, ids) {
       state.activeScales = [];
       _.each(ids, function(id){
@@ -86,9 +105,10 @@ export default {
       state.currentTone = root
     },
 
-    SET_SCALE(state, id) {
-      const newScale = ScaleGenerator.make(state.currentScaleId, state.currentTone, 13);
-      Vue.set(state, 'activeScales', [newScale])
+    UPDATE_SCALE(state, scale) {
+      scale = !scale ? state.activeScale : scale
+      Vue.set(state, 'activeScale', scale);
+      state.fretboard.addScale(state.activeScale);
     },
 
     SELECT_ALL_FRETS(state, value) {
@@ -114,20 +134,22 @@ export default {
 
   actions: {
     initialize({commit, rootGetters}) {
-      commit('NEW_FRETBOARD', rootGetters['fretboard/fretCount'])
-    },
-    setScales({commit, rootGetters}, ids) {
-
-      commit('SET_SCALES',ids);
+      Scales.init()
       commit('NEW_FRETBOARD', rootGetters['fretboard/fretCount']);
-      // commit('SET_POSITIONS');
+      commit('UPDATE_SCALE')
     },
+
+    updateScale({commit}, scale) {
+      commit('UPDATE_SCALE', scale);
+    },
+
     changeTone({commit, rootGetters}, newTone) {
       commit('CHANGE_TONE', newTone);
       commit('SET_CURRENT_SCALE');
       commit('NEW_FRETBOARD', rootGetters['fretboard/fretCount'])
       // commit('SET_POSITIONS')
     },
+
     changeFingerCount({commit}, value) {
       commit('SET_FINGER_COUNT', value)
       commit('SET_POSITIONS')

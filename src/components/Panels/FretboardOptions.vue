@@ -34,8 +34,8 @@
 </template>
 
 <script>
-  import ColorPicker from '@/components/ColorPicker'
-  import CustomSlider from '@/components/CustomSlider'
+  import ColorPicker from '@/components/Widgets/ColorPicker'
+  import CustomSlider from '@/components/Widgets/CustomSlider'
   export default {
     components: {
       ColorPicker,

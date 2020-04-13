@@ -67,7 +67,7 @@
 </template>
 
 <script>
-  import IntervalSelector from '@/components/IntervalSelector'
+  import IntervalSelector from '@/components/Widgets/IntervalSelector'
   export default {
     components: {
       IntervalSelector,

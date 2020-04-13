@@ -1,15 +1,10 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="2">
-        <scale-selector/>
-      </v-col>
       <v-col xs="10">
-        
         <fretboard class="fretboard" />
-        <tone-selector class="tone-selector"></tone-selector>
         <div class="divider"></div>
-        <!-- <options/> -->
+        <scales-panel/>
       </v-col>
       
     </v-row>
@@ -18,18 +13,14 @@
 </template>
 
 <script>
-import Fretboard from "@/components/Fretboard";
-import ScaleSelector from "@/components/ScaleSelector"
-// import Options from "@/components/Options"
-import ToneSelector from '@/components/ToneSelector'
+import Fretboard from "@/components/Fretboard/Fretboard";
+import ScalesPanel from "@/components/Panels/ScalesPanel";
 
 export default {
   name: 'App',
   components: {
     Fretboard,
-    ScaleSelector,
-    ToneSelector,
-    // Options
+    ScalesPanel,
   }
 }
 </script>

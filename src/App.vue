@@ -3,15 +3,16 @@
     <appbar/>
     <v-content>
         <fretboard-content/>
-      
+        
     </v-content>
     
   </v-app>
 </template>
 
 <script>
-import FretboardContent from "@/components/Content";
-import Appbar from '@/components/Appbar'
+import FretboardContent from "@/components/Pages/Content";
+
+import Appbar from '@/components/App/Appbar'
 
 export default {
   name: 'App',

@@ -30,7 +30,15 @@ export default {
     stringColor: '#000000',
     toneColor: '#42A5F5',
     toneSelectedColor: '#FF0000',
-    toneTextColor: '#FFFFFF' ,
+    toneTextColor: '#FFFFFF',
+    functionColors: {
+      d: '#D1C4E9', //'deep-purple lighten-4',
+      m: '#C5CAE9', //'indigo lighten-4',
+      M: '#FFECB3', //'amber lighten-4',
+      A: '#FFCCBC', //'deep-orange lighten-4',
+      P: '#DCEDC8', //'light-green lighten-4',
+      blank: 'FFFFFF'
+    },
     
     //USER
     allSelected: false,

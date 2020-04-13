@@ -61,6 +61,7 @@
 
       visible() {
         let pitch = this.pitch;
+        // return true
         return this.pitch.scales.length > 0
       },
 

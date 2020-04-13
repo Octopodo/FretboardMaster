@@ -1,6 +1,6 @@
 <template>
-  <div style="z-index: -1!important">
-    <v-row>
+  <div >
+    <v-row class="ml-12 mb-12">
       <div :style="bareStyle"></div>
       <div :style="fretboardStyle">
         <div :style="{position: 'absolute', width: `${size.width}px`}">
@@ -58,13 +58,12 @@
         </div>
       </div>
     </v-row>
-    
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
-  import Fret from '@/components/Fret'
+  import Fret from '@/components/Fretboard/Fret'
   export default {
     components: {
       Fret
@@ -209,5 +208,9 @@
 </script>
 
 <style lang="sass" scoped>
-
+.fretboard-container
+  width: 100%
+  display: block
+  margin-left: auto
+  margin-right: auto
 </style>

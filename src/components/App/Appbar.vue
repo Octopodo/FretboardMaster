@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  // import FretboardStyleControls from '@/components/FretboardStyleControls'
+  // import FretboardStyleControls from '@/components/Panels/FretboardOptions'
   export default {
     components: {
       // FretboardStyleControls

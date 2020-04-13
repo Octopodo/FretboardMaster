@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import ScaleSelector from '@/components/ScaleSelector'
+import ScaleSelector from '@/components/Scales/ScaleSelector'
   export default {
     components: {
       ScaleSelector

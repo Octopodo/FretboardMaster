@@ -1,15 +1,18 @@
 import _ from 'underscore';
-import { Scale, ScaleType, Note} from '@tonaljs/tonal'
-const ChromaticScale = require('@/constants/chromatic-scale.js').default
+import { Scale, ScaleType, Note, AbcNotation as Notation} from '@tonaljs/tonal';
 
-const tunning = [
-  'E4',
-  'B3',
-  'G3',
-  'D3',
-  'A2',
-  'E2', 
-]
+
+const ChromaticScale = require('@/constants/chromatic-scale.js').default
+const tunning = ['E4', 'B3', 'G3', 'D3', 'A2', 'E2'];
+
+function getPureNote(note) {
+  return note.replace(/[0-9]/g, '');
+}
+
+function getOctave(note) {
+  return note.replace(/\D/g, '')
+}
+
 
 const Fretboard = function(tunning, fretCount, flats) {
   this.tunning = tunning;
@@ -28,15 +31,17 @@ const Fretboard = function(tunning, fretCount, flats) {
     const chromatic = Scale.get(`${firstFret} chromatic`);
     const notes = chromatic.notes;
     const stringOctaves = Math.floor(this.fretCount / notes.length);
-    const octaves = lastOctave - firstOctave
+    const octaves = lastOctave - firstOctave;
     const extra = this.fretCount - notes.length * stringOctaves
     for(var oct = firstOctave; oct < lastOctave; oct++) {
       let pitch = Note.get(firstFret).letter + oct;
       let scale = Scale.get(`${pitch} chromatic`).notes;
+      scale = _.map(scale, function(n){return n})
       this.spine = this.spine.concat(scale)
     }
     let pitch = Note.get(firstFret).letter + (oct + 1);
-    let scale = Scale.get(`${pitch} chromatic`).notes.slice(0, extra);
+    let scale = Scale.get(`${pitch} chromatic`).notes;
+    scale = _.map(scale, function(n){return n}).slice(0, extra)
     this.spine = this.spine.concat(scale)
   }
 
@@ -49,22 +54,30 @@ const Fretboard = function(tunning, fretCount, flats) {
       for( let f = 0; f < this.fretCount; f++) {
         let pitch = {
           note: this.spine[fret],
-          scales: [1],
-          positions: [1]
+          scales: [],
+          positions: [],
+          fret: f
         }
         string.push(pitch);
         fret++
       }
       this.matrix.push(string)
     }
+    var stop = 0;
   }
 
-  this.addScale = function(scaleName) {
-    let scale = Scale.get(`${this.root} ${scaleName.toLowerCase}`);
-    this.scales.push(scale);
+  this.addScale = function(scale) {
+    scale = typeof scale === 'string' ? Scale.get(`${getPureNote(this.root)} ${scale.toLowerCase()}`) : scale;
+    this.clearScale()
     this.walk(function(fret) {
-      if(scale.notes.indexOf(fret.note) != -1 ) {
-        fret.scales.push(scaleName)
+      let inScale = _.find(scale.notes, function(n) { 
+        let note = getPureNote(n);
+        let fretNote =  getPureNote(fret.note);
+        let hen = Note.enharmonic(fretNote);
+        return  note == fretNote || note == Note.enharmonic(fretNote)
+      });
+      if(inScale) {
+        fret.scales.push(scale.name)
       }
     })
   }
@@ -86,17 +99,12 @@ const Fretboard = function(tunning, fretCount, flats) {
   }
 
   this.clearScale = function () {
-    for (var i = 0; i < this.chromatic; i++) {
-      this.chromatic[i].inScale = false;
-    }
+    this.walk(function(note) {
+      note.scales = []
+    })
   }
 
-  this.scaleTesting = function() {
-
-  }
-  this.scaleTesting()
   this.generate()
-  var stop = 0;
 }
 
 export { Fretboard }
