@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import Fretboard from   "@/components/Fretboard/Fretboard";
+import Fretboard from   "@/components/Fretboard/FretboardView";
 import ScaleGenomePanel from "@/components/Panels/ScaleGenomePanel";
 import ToneSelector from  "@/components/Panels/ToneSelector"
 import ChordCheatsheet from "@/components/Widgets/ChordCheatsheet"

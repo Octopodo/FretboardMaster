@@ -1,6 +1,5 @@
 import { Fretboard } from '@/lib/fretboard.js'
 import ChordsInterface from '@/lib/chords-interface.js'
-import IntervalMaps from '@/constants/interval-map'
 import Scales from '@/lib/scales-interface'
 import Vue from 'vue'
 import _ from 'underscore'
@@ -29,7 +28,6 @@ export default {
     chords: [],
     fingers: 2,
     fretboard: undefined,
-    intervalsMap: IntervalMaps.map,
     key: 'Major',
     
     maxFingers: 3,
