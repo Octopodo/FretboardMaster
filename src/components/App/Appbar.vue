@@ -4,7 +4,7 @@
       color="grey darken-4"
       dark
     >
-      <v-toolbar-title>Fretboard Master</v-toolbar-title>
+      <v-toolbar-title>Fretboard Master(v-0.3)</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <v-btn icon  @click.prevent="drawer = true">
