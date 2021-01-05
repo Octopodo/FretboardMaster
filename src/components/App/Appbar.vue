@@ -7,7 +7,7 @@
       <!-- <v-toolbar-title> -->
         <v-row>
           <div class="title ml-5">Fretboard Master</div>
-          <div class="caption grey--text ml-1">(alpha-0.4)</div>
+          <div class="caption grey--text ml-1">(Fretboard refactor: alpha-0.4)</div>
         </v-row>
         
       <!-- </v-toolbar-title> -->
