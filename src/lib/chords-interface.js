@@ -6,6 +6,7 @@ export default {
 
   getKey(pitch, type) {
     let note = Note.pitchClass(pitch)
+    let c = Chord;
     let key = {}
     if(type.toLowerCase() == 'major') {
       key = Key.majorKey(note)

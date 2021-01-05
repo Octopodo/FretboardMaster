@@ -3,7 +3,7 @@
     :style="fretStyle"
     class="d-flex align-center"
     @click.prevent="toggleSelection"
-    @contextmenu.prevent="rightClick"
+    @contextmenu.prevent="nextSet()"
   >
     <transition name="scale-transition">
       <div
@@ -88,9 +88,12 @@
       },
 
       color() {
-        return this.defaultColor
+        let color = this.$store.state.fretboard.setColors[this.$data.set];
+        console.log(color)
+        return color //this.defaultColor
       },
-      
+
+
       toneStyle(){
         let size = this.$store.getters['fretboard/toneSize'];
         let color = this.color;
@@ -122,7 +125,8 @@
         prvent: false,
         $_visible: false,
         $_selectionColor: '#FFFFFF',
-        selected: false
+        selected: false,
+        set: 0
       }
     },
 
@@ -154,6 +158,13 @@
 
         this.$data.$_visible = !this.$data.$_visible
 
+      },
+
+      nextSet() {
+        let set = this.$data.set + 1
+        let length = this.$store.state.fretboard.setColors.length
+        this.$data.set =  set >= length ? 0 : set
+        console.log(this.$data.set)
       }
     }
   }

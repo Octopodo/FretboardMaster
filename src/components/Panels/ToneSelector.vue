@@ -3,6 +3,7 @@
     <v-col>
       <v-btn-toggle dark class="buttons">
         <v-btn
+          class="text-capitalize"
           v-for="(item, index) in availableTones"
           :key="index"
           @click="changeTone(index)"
@@ -53,6 +54,7 @@
         this.$store.dispatch('tone/changeTone', tone)
       },
       pitchClass(tone){
+        let n = Note.pitchClass(tone); 
         return Note.pitchClass(tone)
       },
     }

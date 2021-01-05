@@ -39,6 +39,14 @@ export default {
       P: '#DCEDC8', //'light-green lighten-4',
       blank: 'FFFFFF'
     },
+    setColors: [
+      '#F44336', //'deep-purple lighten-4',
+      '#9C27B0', //'indigo lighten-4',
+      '#795548', //'amber lighten-4',
+      '#009688', //'deep-orange lighten-4',
+      '#607D8B', //'light-green lighten-4',
+      '#FF6F00'
+    ],
     
     //USER
     allSelected: false,

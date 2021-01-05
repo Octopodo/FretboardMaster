@@ -3,7 +3,7 @@
     <div>
       <v-col >
         <scale-selector class="ml-24"/>
-        <genome class="ml-24"/>
+        <!-- <genome class="ml-24"/> -->
         <v-col class="ml-6 mt-8 justify-center">
           
           <v-card 
@@ -30,12 +30,12 @@
 </template>
 
 <script>
-  import Genome from '@/components/Scales/Genome(Original)'
+  // import Genome from '@/components/Scales/Genome(Original)'
   import ScaleInfo from '@/components/Scales/ScaleInfo'
   import ScaleSelector from "@/components/Scales/ScaleSelector";
   export default {
     components: {
-      Genome,
+      // Genome,
       ScaleInfo,
       ScaleSelector,
     },
