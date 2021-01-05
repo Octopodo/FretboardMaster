@@ -26,7 +26,6 @@ export default {
       key = _.merge(key, keySubClass)
     }
     
-    console.log('KEY: ', key)
     return key
   }
 

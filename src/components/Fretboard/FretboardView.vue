@@ -81,11 +81,13 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import FretboardEngine from '@/components/Fretboard/FretboardEngine'
   import Fret from '@/components/Fretboard/Fret'
   export default {
     components: {
       Fret
     },
+    mixins: [FretboardEngine],
     computed: {
       //GETTERS
       ...mapGetters({

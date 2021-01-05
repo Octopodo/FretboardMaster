@@ -1,10 +1,10 @@
 <template>
   <v-app id="app">
     <appbar/>
-    <v-content>
+    <v-main>
         <fretboard-content/>
         
-    </v-content>
+    </v-main>
     
   </v-app>
 </template>

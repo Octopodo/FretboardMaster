@@ -24,7 +24,7 @@
       },
       tunning: {
         type: Array,
-        default: [ 'E4','B3', 'G3', 'D3', 'A2', 'E2' ]
+        default: ()=>[ 'E4','B3', 'G3', 'D3', 'A2', 'E2' ]
       }
     },
     computed: {
@@ -39,8 +39,10 @@
       }
     },
     mounted() {
-
+      this.fretboard = new Fretboard(this.tunning, this.fretCount);
     }
+
+
   }
 </script>
 
