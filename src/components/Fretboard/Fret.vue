@@ -57,7 +57,7 @@
       },
       pitch() {
         let pitch = this.$store.getters['tone/getPitch']( this.indices.string, this.indices.fret);
-        return pitch
+        return  pitch
       },
 
 
@@ -99,7 +99,7 @@
         let color = this.color;
         let selectedColor = this.selectedColor;
         let roundness = this.$store.getters['fretboard/toneRoundness'];
-        let relieve = `0px 0px ${size/10}px ${size/12}px rgba(0, 0, 0, 0.2) inset`;
+        let relieve = `0px 0px ${size/10}px ${size/12}px rgba(0, 0, 0, 0.4) inset`;
         selectedColor = `0px 0px ${size/12}px ${size/5}px rgba(${selectedColor.r}, ${selectedColor.g}, ${selectedColor.b}, 0.5)`
         let style = {
           width: `${size}px`,
