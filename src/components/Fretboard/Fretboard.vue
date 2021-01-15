@@ -1,6 +1,6 @@
 <template>
   <div >
-    <v-row class="ml-12 mb-12">
+    <v-row class="ml-4 mb-12">
       <div
         :style="nutStyle"
       >
