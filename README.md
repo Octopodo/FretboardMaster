@@ -1,4 +1,7 @@
-# fretboard-generator
+# Fretboard Master(core-rbuil)
+
+### This branch intend to rebuild the core app to achieve more granularity between components.
+
 
 ## Project setup
 ```
