@@ -40,20 +40,36 @@ export default {
       blank: 'FFFFFF'
     },
     setColors: [
-      '#F44336', //'deep-purple lighten-4',
-      '#9C27B0', //'indigo lighten-4',
-      '#795548', //'amber lighten-4',
-      '#009688', //'deep-orange lighten-4',
-      '#607D8B', //'light-green lighten-4',
+      '#607D8B',
+      '#F44336', 
+      '#9C27B0', 
+      '#795548', 
+      '#009688', 
       '#FF6F00'
     ],
+    intervalColors: [
+      '#F44336',
+      '#004D40', 
+      '#FFAB00', 
+      '#795548', 
+      '#FFD600', 
+      '#42A5F5',
+      '#7C4DFF'
+    ],
+
+    //Opacities
+    ghostNotesOpacity: 0.5,
     
     //USER
     allSelected: false,
     fretCount: 24,
     maxFingers: 4,
     stringCount: 6,
+    showNotes: true,
+    showIntervals: false,
     hideUnmarkedNotes: false,
+    ghostNotes: false,
+
   },
 
   getters: {
@@ -68,6 +84,11 @@ export default {
     fretDistances: state => state.fretDistances,
     fretdotColor: state => state.fretdotColor,
     fretdotSize: state => state.fretdotSize,
+    ghostNotes: state => state.ghostNotes,
+    ghostNotesOpacity: state => state.ghostNotesOpacity,
+    hideUnmarkedNotes: state => state.hideUnmarkedNotes,
+    intervalColors: state => state.intervalColors,
+    showNotes: state => state.showNotes,
     stringColor: state => state.stringColor,
     stringCount: state => state.stringCount,
     stringHeight: state => state.stringHeight,
@@ -75,6 +96,7 @@ export default {
     toneTextColor: state => state.toneTextColor,
     toneSize: state => state.toneSize,
     toneRoundness: state => state.toneRoundness,
+    showIntervals: state => state.showIntervals,
 
     get(state) {
       return wich => {

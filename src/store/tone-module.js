@@ -28,16 +28,22 @@ export default {
     currentTone: 'C2',
     chords: [],
     fingers: 2,
+    intervalColorsLength: 7,
     fretboard: undefined,
     intervalsMap: IntervalMaps.map,
     key: 'Major',
     
+    stringCount: 6,
     maxFingers: 3,
     positions: [],
     positionsCount: 7,
     scaleNotes: [],
     tunning: standartTunning,
-    userScales: []
+    userScales: [],
+    invisibleStrings: [],
+    setColors: [],
+    intervalColors: [],
+    
   },
 
   getters: {
@@ -52,6 +58,9 @@ export default {
     stringCount: state=> state.stringCount,
     toneSize: state => state.toneSize,
     userScales: state => state.userScales,
+    invisibleStrings: state => state.invisibleStrings,
+    intervalColors: state => state.intervalColors,
+    intervalColorsLength: state => state.intervalColorsLength,
     
 
     //COMPLEX
@@ -102,7 +111,6 @@ export default {
       return(string, fret) => {
         return true
       }
-      
     }
   },
 
@@ -133,6 +141,7 @@ export default {
 
     SET(state, payload) {
       state[payload.wich] = payload.value
+      console.log(state.invisibleStrings)
     },
 
     SET_ROOT_TONE(state, root) {

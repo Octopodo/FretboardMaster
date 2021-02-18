@@ -4,17 +4,34 @@
       <v-col xs="10">
         <div class="d-flex justify-center">
           <fretboard class="fretboard" />
+          
         </div>
         
         <div class="divider"></div>
+        <interval-boxes></interval-boxes>
         <v-row class="">
           <v-col cols="3">
+            <v-checkbox
+              v-model="hideUnmarkedNotes"
+              :color="hideUnmarkedNotes ? 'green' : ''"
+              label="Hide unmarked"
+              class="ml-8"
+              dense
+            ></v-checkbox>
             <button-selector
-              title = 'Dedos'
-              model="fingers"
+              title="Interval Colors"
+              model="intervalColors"
               module="tone"
-              items="maxFingers"
-              mutation="UPDATE_FINGERS"
+              items="intervalColorsLength"
+              multiple
+            />
+            
+            <button-selector
+              title="Strings"
+              model="invisibleStrings"
+              module="tone"
+              items="stringCount"
+              multiple
             />
             <button-selector
               title = 'Posiciones'
@@ -22,6 +39,13 @@
               module="tone"
               items="positionsCount"
               multiple
+            />
+             <button-selector
+              title = 'Dedos'
+              model="fingers"
+              module="tone"
+              items="maxFingers"
+              mutation="UPDATE_FINGERS"
             />
           </v-col>
           <v-divider vertical></v-divider>
@@ -52,6 +76,7 @@ import ScaleGenomePanel from "@/components/Panels/ScaleGenomePanel";
 import ToneSelector from  "@/components/Panels/ToneSelector"
 import ChordCheatsheet from "@/components/Widgets/ChordCheatsheet"
 import ButtonSelector from "@/components/Widgets/ButtonSelector";
+import IntervalBoxes from "@/components/Experimental/IntervalBoxes"
 
 export default {
   name: 'App',
@@ -60,7 +85,18 @@ export default {
     ScaleGenomePanel,
     ButtonSelector,
     ToneSelector,
-    ChordCheatsheet
+    ChordCheatsheet,
+    IntervalBoxes
+  },
+  computed: {
+    hideUnmarkedNotes: {
+        get() {
+          return this.$store.getters['fretboard/hideUnmarkedNotes']
+        },
+        set(value) {
+          this.$store.commit('fretboard/SET', {wich: 'hideUnmarkedNotes', value: value})
+        }
+      },
   }
 }
 </script>

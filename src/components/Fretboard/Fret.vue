@@ -51,9 +51,25 @@
       ...mapGetters({
         defaultColor: 'fretboard/toneColor',
         textColor: 'fretboard/toneTextColor',
+        showNotes: 'fretboard/showNotes',
+        showIntervals: 'fretboard/showIntervals'
       }),
       displayTone() {
-        return Note.pitchClass(this.pitch.note)
+        let accidental = '',
+            show = '';
+        if(this.showNotes) {
+          if(this.showIntervals) {
+            accidental = Note.pitchClass(this.pitch.note).substr(1);
+            show = this.interval + accidental;
+            // show = Interval.quality(interval)
+          } else {
+            show = Note.pitchClass(this.pitch.note)
+          }
+        }
+        return show
+      },
+      interval() {
+        return this.pitch.interval[0]
       },
       pitch() {
         let pitch = this.$store.getters['tone/getPitch']( this.indices.string, this.indices.fret);
@@ -65,8 +81,12 @@
         if(this.alwaysVisible) {
           return true
         }
-        
-        return this.$data.$_visible 
+        let strings = this.$store.state.tone.invisibleStrings;
+        let showString = strings.indexOf(this.indices.string) === -1;
+        return this.$data.$_visible && showString && (this.ghostNotes || !this.hideUnmarked);
+      },
+      hideUnmarked() {
+        return this.$store.state.fretboard.hideUnmarkedNotes && !this.isMarked;
       },
       scale () {
         let positions = this.$store.getters['tone/positions']
@@ -75,6 +95,16 @@
 
       selectedColor() {
         return this.$store.getters['fretboard/toneSelectedColor']('rgb')
+      },
+
+      ghostNotes() {
+        console.log('IS GHOST', this.$store.getters['fretboard/ghostNotes'])
+        return this.$store.getters['fretboard/ghostNotes']
+      },
+      opacity() {
+        let opacity = this.ghostNotes && this.hideUnmarked  && !this.marked? this.$store.getters['fretboard/ghostNotesOpacity'] : 1;
+    
+        return opacity
       },
 
       fretStyle() {
@@ -88,18 +118,26 @@
       },
 
       color() {
+        let intervalColors = this.$store.getters['tone/intervalColors'];
         let color = this.$store.state.fretboard.setColors[this.$data.set];
-        console.log(color)
+        if(intervalColors.length > 0){
+          let setInterval = intervalColors.indexOf(this.interval - 1);
+          if(setInterval >= 0) {
+            color = this.$store.state.fretboard.intervalColors[this.interval - 1]
+           } 
+        }
         return color //this.defaultColor
       },
-
+      
+      
 
       toneStyle(){
-        let size = this.$store.getters['fretboard/toneSize'];
-        let color = this.color;
-        let selectedColor = this.selectedColor;
-        let roundness = this.$store.getters['fretboard/toneRoundness'];
-        let relieve = `0px 0px ${size/10}px ${size/12}px rgba(0, 0, 0, 0.4) inset`;
+        let size = this.$store.getters['fretboard/toneSize'],
+            color = this.color,
+            selectedColor = this.selectedColor,
+            roundness = this.$store.getters['fretboard/toneRoundness'],
+            relieve = `0px 0px ${size/10}px ${size/12}px rgba(0, 0, 0, 0.4) inset`;
+        
         selectedColor = `0px 0px ${size/12}px ${size/5}px rgba(${selectedColor.r}, ${selectedColor.g}, ${selectedColor.b}, 0.5)`
         let style = {
           width: `${size}px`,
@@ -109,7 +147,8 @@
           color: this.textColor,
           margin: 'auto',
           position: 'relatve',
-          boxShadow: this.selected ? `${selectedColor}, ${relieve}` : relieve
+          boxShadow: this.selected ? `${selectedColor}, ${relieve}` : relieve,
+          opacity: this.opacity
         }
         return style
       },
@@ -126,6 +165,7 @@
         $_visible: false,
         $_selectionColor: '#FFFFFF',
         selected: false,
+        isMarked: false,
         set: 0
       }
     },
@@ -133,7 +173,14 @@
     watch: {
       scale() {
         this.$data.$_visible = this.isInPosition() 
-      }
+      },
+      color() {
+        let baseColor = this.$store.state.fretboard.setColors[0];
+        this.isMarked = this.color !== baseColor;
+        console.log('IS MARKED:', this.isMarked)
+
+      },
+
     },
     methods: {
       isInPosition() {
@@ -164,7 +211,6 @@
         let set = this.$data.set + 1
         let length = this.$store.state.fretboard.setColors.length
         this.$data.set =  set >= length ? 0 : set
-        console.log(this.$data.set)
       }
     }
   }
