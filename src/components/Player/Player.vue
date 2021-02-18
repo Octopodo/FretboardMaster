@@ -13,6 +13,25 @@
       <div class="text-h1 ml-6 font-weight-black">
         {{point}}
       </div>
+      <v-col>
+        <v-checkbox
+          v-model="showNotes"
+          :color="showNotes ? 'green' : ''"
+          label="Show Notes"
+        />
+        <v-checkbox
+          v-model="showIntervals"
+          :color="showIntervals ? 'green' : ''"
+          label="Show Intervals"
+        />
+        <v-checkbox
+          dense
+          v-model="ghostNotes"
+          :color="ghostNotes ? 'green' : ''"
+          label="Ghost Notes"
+        />
+      </v-col>
+      
     </v-row>
     
   </div>
@@ -26,11 +45,35 @@
     },
     computed: {
       playing() {
-        console.log('THE GETTERS', this.$store.getters['player/playing'])
+        // console.log('THE GETTERS', this.$store.getters['player/playing'])
         return this.$store.getters['player/playing']
       },
       point() {
         return this.$store.getters['player/currentPoint'] + 1
+      },
+      showNotes: {
+        get() {
+          return this.$store.getters['fretboard/showNotes']
+        },
+        set(value) {
+          this.$store.commit('fretboard/SET', {wich: 'showNotes', value: value})
+        }
+      },
+      showIntervals: {
+        get() {
+          return this.$store.getters['fretboard/showIntervals']
+        },
+        set(value) {
+          this.$store.commit('fretboard/SET', {wich: 'showIntervals', value: value})
+        }
+      },
+      ghostNotes: {
+        get() {
+          return this.$store.getters['fretboard/ghostNotes']
+        },
+        set(value) {
+          this.$store.commit('fretboard/SET', {wich: 'ghostNotes', value: value})
+        }
       }
     },
     methods: {
