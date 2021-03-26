@@ -2,7 +2,7 @@ import { rgbToHex, hexToRgb } from '@/lib/utils.js'
 import FretConstants from '@/constants/fret-constants.js'
 import Vue from 'vue'
 
-const fbRatio = 0.8;
+const fbRatio = 0.6;
 const windowWidth = window.innerWidth;
 
 export default {
@@ -11,7 +11,7 @@ export default {
     //DIMENSIONS
     fbRatio: fbRatio,
     fretbarWidth: 4,
-    fretboardHeight: 200,
+    fretboardHeight: 250,
     fretboardWidth: windowWidth * fbRatio,
     fretdotSize: 20,
     selectedWidth: 5,
@@ -58,11 +58,11 @@ export default {
     ],
 
     //Opacities
-    ghostNotesOpacity: 0.5,
+    ghostNotesOpacity: 0.4,
     
     //USER
     allSelected: false,
-    fretCount: 24,
+    fretCount: 17,
     maxFingers: 4,
     stringCount: 6,
     showNotes: true,

@@ -60,7 +60,7 @@
         if(this.showNotes) {
           if(this.showIntervals) {
             accidental = Note.pitchClass(this.pitch.note).substr(1);
-            show = this.interval + accidental;
+            show = this.interval //+ accidental;
             // show = Interval.quality(interval)
           } else {
             show = Note.pitchClass(this.pitch.note)

@@ -1,5 +1,9 @@
 import Vue from 'vue';
 
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+
+
 function generateSequence(uniq, numberNotes){
   var sequence = []
   var count = numberNotes || 7;
@@ -41,7 +45,8 @@ export default {
     count: 7,
     type: 'positions',
     intervalID: '',
-    currentPoint: 0
+    currentPoint: 0,
+    bipFrequency: 300
   },
   getters: {
     bpm: state => state.bpm,
@@ -54,7 +59,9 @@ export default {
     type: state => state.positions,
     intervalID: state => state.intervalID,
     interval: state => state.interval,
-    currentPoint: state => state.currentPoint
+    currentPoint: state => state.currentPoint,
+    bip: state => state.note,
+    bipFrequency: state => state.noteFrequency
   },
   mutations: {
     BPM(state, bpm) {
@@ -72,7 +79,7 @@ export default {
       state.playing = false
     },
     INTERVAL(state) {
-      state.interval = 60000/(state.bpm/state.beats[state.beat])
+      state.interval = (60000/state.bpm)*state.beats[state.beat]
     },
     REDUCE_SEQUENCE(state, index) {
       state.sequence.splice(index, 1)
@@ -105,10 +112,12 @@ export default {
       await commit('PLAY');
       await commit('INTERVAL')
       await commit('NEW_SEQUENCE');
+
       dispatch('update')
       console.log('Outer Interval: ', getters.interval)
       let intervalID = setInterval(() => {
         dispatch('update');
+
       }, getters.interval)
       commit('INTERVAL_ID', intervalID)
     },
@@ -127,6 +136,12 @@ export default {
     stop({commit, getters}) {
       commit('STOP');
       clearInterval(getters.intervalID)
+    },
+    async playBip({getters}) {
+      let bip = getters.bip;
+      bip.start();
+      bip.stop(0.5);
+
     }
   }
 }
