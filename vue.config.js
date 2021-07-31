@@ -14,6 +14,6 @@ module.exports = {
   },
   // publicPath: '/FretboardMaster/'
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/FretboardMaster/'
+    ? '/FretboardMaster.github.io/'
     : '/'
 }
