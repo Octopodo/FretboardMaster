@@ -5,6 +5,7 @@
         <player/>
         <fretboard-content/>
         <random-sequences/>
+        
     </v-content>
     
   </v-app>

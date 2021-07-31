@@ -183,7 +183,7 @@ const Fretboard = function(tunning, fretCount, flats) {
       }
       out += '||\n' 
     }
-    console.log(out)
+
   }
 
   this.generate()

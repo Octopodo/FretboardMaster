@@ -75,6 +75,16 @@ export default {
     return scale
   },
 
+  getByChroma(chroma) {
+    
+    let scales = this.getScales(true);
+    let matches = scales.filter(scale => {
+      return scale.chroma === chroma
+    })
+    
+    return matches
+  },
+
   getTypeByName(name) {
     let stop = 0;
     let scale = ScaleType.get(name)
