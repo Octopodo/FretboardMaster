@@ -98,7 +98,6 @@
       },
 
       ghostNotes() {
-        console.log('IS GHOST', this.$store.getters['fretboard/ghostNotes'])
         return this.$store.getters['fretboard/ghostNotes']
       },
       opacity() {
@@ -177,7 +176,6 @@
       color() {
         let baseColor = this.$store.state.fretboard.setColors[0];
         this.isMarked = this.color !== baseColor;
-        console.log('IS MARKED:', this.isMarked)
 
       },
 

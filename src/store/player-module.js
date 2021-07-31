@@ -19,7 +19,6 @@ function generateSequence(uniq, numberNotes){
       positions.push(i)
     }
     for(i = positions.length - 1; i >= 0; i--) {
-      // console.log('splice    ' +  positions.splice(this.randomInt(0, j - 1), 1))
       sequence.push(positions.splice(randomInt(0, i - 1), 1) [0])
     }
   } else {
@@ -65,11 +64,9 @@ export default {
   },
   mutations: {
     BPM(state, bpm) {
-      console.log('New BPM: ', bpm)
       state.bpm = bpm
     },
     BEAT(state, beat) {
-      console.log(beat)
       state.beat = beat
     },
     PLAY(state) {
@@ -105,7 +102,6 @@ export default {
       await commit('CURRENT_POINT', sequence[0]);
       await commit('REDUCE_SEQUENCE', 0);
       await commit('tone/SET', {wich: 'positions', value: [getters.currentPoint]}, {root: true})
-      console.log('Current point: ', getters.currentPoint)
 
     },
     async play({commit, dispatch, getters}) {
@@ -114,7 +110,6 @@ export default {
       await commit('NEW_SEQUENCE');
 
       dispatch('update')
-      console.log('Outer Interval: ', getters.interval)
       let intervalID = setInterval(() => {
         dispatch('update');
 
