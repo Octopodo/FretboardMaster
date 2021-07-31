@@ -1,35 +1,43 @@
 <template>
-  <div>
+  <div class="metronome pl-12">
     <metronome/>
-    <v-row>
-      <v-btn
-        @click.prevent="play"
-        icon
-      >
-        <v-icon v-if="playing">mdi-pause</v-icon>
-        <v-icon v-else>mdi-play</v-icon>
+    <v-row
+      class="pl-5"
+    >
+      <v-row>
+        <v-btn
+          @click.prevent="play"
+          icon
+          large
+        >
+          <v-icon v-if="playing">mdi-pause</v-icon>
+          <v-icon v-else>mdi-play</v-icon>
 
-      </v-btn>
-      <div class="text-h1 ml-6 font-weight-black">
-        {{point}}
-      </div>
+        </v-btn>
+        <div class=" text-h2 ml-6 font-weight-black">
+          {{point}}
+        </div>
+      </v-row>
       <v-col>
-        <v-checkbox
-          v-model="showNotes"
-          :color="showNotes ? 'green' : ''"
-          label="Show Notes"
-        />
-        <v-checkbox
-          v-model="showIntervals"
-          :color="showIntervals ? 'green' : ''"
-          label="Show Intervals"
-        />
-        <v-checkbox
-          dense
-          v-model="ghostNotes"
-          :color="ghostNotes ? 'green' : ''"
-          label="Ghost Notes"
-        />
+        <v-row>
+
+            <v-checkbox
+              v-model="showNotes"
+              :color="showNotes ? 'green' : ''"
+              label="Show Notes"
+            />
+            <v-checkbox
+              v-model="showIntervals"
+              :color="showIntervals ? 'green' : ''"
+              label="Show Intervals"
+            />
+            <v-checkbox
+              dense
+              v-model="ghostNotes"
+              :color="ghostNotes ? 'green' : ''"
+              label="Ghost Notes"
+            />
+        </v-row>
       </v-col>
       
     </v-row>
@@ -88,6 +96,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="sass" scoped>
+.metronome
+  width: 900px!important
 </style>

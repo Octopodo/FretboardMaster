@@ -8,7 +8,6 @@
         </div>
         
         <div class="divider"></div>
-        <interval-boxes></interval-boxes>
         <v-row class="">
           <v-col cols="3">
             <v-checkbox
@@ -60,7 +59,7 @@
           
         </v-row>
         
-        
+        <interval-boxes color="grey"></interval-boxes>
         
       </v-col>
       
