@@ -141,7 +141,6 @@ export default {
 
     SET(state, payload) {
       state[payload.wich] = payload.value
-      console.log(state.invisibleStrings)
     },
 
     SET_ROOT_TONE(state, root) {
